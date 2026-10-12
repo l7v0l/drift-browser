@@ -15,7 +15,7 @@ export default tseslint.config(
     rules: reactHooks.configs.recommended.rules
   },
   {
-    files: ['src/main/**/*.ts', 'src/preload/**/*.ts', '*.config.{js,ts}'],
+    files: ['src/main/**/*.ts', 'src/preload/**/*.ts', '*.config.{js,ts}', 'scripts/**/*.mjs'],
     languageOptions: { globals: globals.node }
   },
   prettier
