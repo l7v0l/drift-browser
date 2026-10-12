@@ -76,7 +76,7 @@ export function TabStrip({ leading }: { leading?: ReactNode }) {
               className={[
                 'group flex h-8 items-center gap-2 rounded-full transition-colors duration-150',
                 tab.pinned ? 'w-9 justify-center' : 'min-w-0 max-w-[200px] flex-1 px-3',
-                active ? 'bg-surface shadow-sm' : 'hover:bg-surface-3',
+                active ? 'bg-surface shadow-rest' : 'hover:bg-surface-3',
                 overId === tab.id && dragId !== tab.id ? 'ring-2 ring-accent' : ''
               ].join(' ')}
             >
@@ -126,7 +126,7 @@ export function TabStrip({ leading }: { leading?: ReactNode }) {
             }}
           />
           <ul
-            className="fixed z-50 min-w-40 rounded-xl border border-line bg-surface p-1 shadow-lg"
+            className="fixed z-50 min-w-40 rounded-xl border border-line bg-surface p-1 shadow-hover"
             style={{ top: menu.y, insetInlineStart: menu.x }}
           >
             <MenuItem

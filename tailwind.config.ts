@@ -1,7 +1,7 @@
 import type { Config } from 'tailwindcss'
 
-// Colors map to CSS variables (src/renderer/styles/index.css) so themes swap without rebuilding.
-// Values are provisional (logo palette) until DESIGN.md is applied.
+// Design tokens come from DESIGN.md. Colors map to CSS variables (src/renderer/styles/index.css)
+// so light / dark themes swap without rebuilding.
 export default {
   content: ['./src/renderer/**/*.{html,tsx,ts}', './src/features/**/renderer/**/*.{tsx,ts}'],
   darkMode: ['class', '[data-theme="dark"]'],
@@ -15,7 +15,24 @@ export default {
         muted: 'var(--muted)',
         line: 'var(--line)',
         accent: 'var(--accent)',
-        'accent-ink': 'var(--accent-ink)'
+        'accent-ink': 'var(--accent-ink)',
+        coral: 'var(--coral)',
+        amber: 'var(--amber)',
+        ring: 'var(--ring)',
+        scrim: 'var(--scrim)'
+      },
+      fontFamily: {
+        display: ['Readex Pro', 'IBM Plex Sans Arabic', 'system-ui', 'sans-serif'],
+        label: ['DM Sans', 'IBM Plex Sans Arabic', 'system-ui', 'sans-serif']
+      },
+      borderRadius: {
+        // Ultra-rounded cards and panels (28px). Controls use rounded-full.
+        card: '28px'
+      },
+      boxShadow: {
+        rest: 'var(--shadow-rest)',
+        hover: 'var(--shadow-hover)',
+        modal: 'var(--shadow-modal)'
       }
     }
   },

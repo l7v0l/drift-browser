@@ -24,10 +24,26 @@ function Clock() {
   const fmt = (calendar: string) =>
     now.toLocaleDateString(`${lang}-u-ca-${calendar}`, { dateStyle: 'full' })
 
+  // Digits are large and the AM/PM marker small, so Arabic "م" does not dwarf the time.
+  const parts = new Intl.DateTimeFormat(lang, { hour: '2-digit', minute: '2-digit' }).formatToParts(
+    now
+  )
+  const clock = {
+    time: parts
+      .filter((p) => p.type !== 'dayPeriod')
+      .map((p) => p.value)
+      .join('')
+      .trim(),
+    period: parts.find((p) => p.type === 'dayPeriod')?.value ?? ''
+  }
+
   return (
     <div className="text-center">
-      <div className="whitespace-nowrap text-7xl font-semibold tabular-nums">
-        {now.toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' })}
+      <div className="flex items-baseline justify-center gap-3 whitespace-nowrap">
+        <span className="font-label text-7xl font-semibold tabular-nums" dir="ltr">
+          {clock.time}
+        </span>
+        {clock.period && <span className="text-2xl text-muted">{clock.period}</span>}
       </div>
       <div className="mt-2 text-lg">{fmt('islamic-umalqura')}</div>
       <div className="text-muted">{fmt('gregory')}</div>
@@ -137,7 +153,7 @@ export default function NewTab() {
           if (text.trim()) void call('tabs:navigate', text)
         }}
       >
-        <div className="flex items-center gap-3 rounded-full border border-line bg-surface px-5 py-3 shadow-sm transition-shadow duration-150 focus-within:ring-2 focus-within:ring-accent">
+        <div className="flex items-center gap-3 rounded-full border border-line bg-surface px-5 py-3 shadow-rest transition-shadow duration-150 focus-within:ring-[3px] focus-within:ring-ring">
           <Icon name="search" className="text-muted" />
           <input
             autoFocus

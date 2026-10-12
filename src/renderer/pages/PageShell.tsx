@@ -25,6 +25,6 @@ export function PageShell({ title, actions, children }: Props) {
 export const btn =
   'rounded-full bg-surface px-4 py-1.5 transition-colors duration-150 hover:bg-surface-3 disabled:opacity-40'
 export const btnAccent =
-  'rounded-full bg-accent px-4 py-1.5 text-accent-ink transition-opacity duration-150 hover:opacity-90'
+  'rounded-full bg-coral px-4 py-1.5 text-white transition-opacity duration-150 hover:opacity-90'
 export const field =
-  'rounded-full border border-line bg-surface px-4 py-2 outline-none transition-shadow duration-150 focus:ring-2 focus:ring-accent'
+  'rounded-full border border-line bg-surface px-4 py-2 outline-none transition-shadow duration-150 focus:ring-[3px] focus:ring-ring focus:border-accent'

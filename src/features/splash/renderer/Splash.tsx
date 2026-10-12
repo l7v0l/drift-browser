@@ -49,7 +49,9 @@ export function Splash({ leaving }: { leaving: boolean }) {
         </g>
       </svg>
       <div className="flex flex-col items-center gap-1">
-        <span className="splash-title text-5xl font-semibold tracking-tight">Drift</span>
+        <span className="splash-title font-display text-5xl font-semibold tracking-tight">
+          Drift
+        </span>
         <span className="splash-tag text-lg text-muted">{t('app.tagline')}</span>
       </div>
     </div>

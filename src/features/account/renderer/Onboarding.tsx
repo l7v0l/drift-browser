@@ -11,8 +11,8 @@ const SPLASH_FADE_MS = 500
 
 function Card({ children }: { children: ReactNode }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 p-6">
-      <div className="w-full max-w-sm rounded-3xl border border-line bg-surface p-6 shadow-lg">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-scrim p-6 backdrop-blur-sm">
+      <div className="w-full max-w-sm rounded-card border border-line bg-surface p-6 shadow-modal">
         {children}
       </div>
     </div>
@@ -97,14 +97,14 @@ function EmailStep(props: {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder={props.provider === 'microsoft' ? 'name@hotmail.com' : 'name@gmail.com'}
-        className="w-full rounded-full border border-line bg-surface-2 px-4 py-2.5 outline-none focus:ring-2 focus:ring-accent"
+        className="w-full rounded-full border border-line bg-surface-2 px-4 py-2.5 outline-none focus:ring-[3px] focus:ring-ring focus:border-accent"
         style={{ userSelect: 'text' }}
       />
       {props.error && <p className="mt-2 text-sm text-[#d4482a]">{props.error}</p>}
       <div className="mt-4 flex gap-2">
         <button
           type="submit"
-          className="flex-1 rounded-full bg-accent px-4 py-2 text-accent-ink transition-opacity duration-150 hover:opacity-90"
+          className="flex-1 rounded-full bg-coral px-4 py-2 text-white transition-opacity duration-150 hover:opacity-90"
         >
           {t('account.continue')}
         </button>
@@ -254,7 +254,7 @@ export function Onboarding({ intro }: { intro: boolean }) {
         <div className="flex gap-2">
           <button
             onClick={() => void confirm(true)}
-            className="flex-1 rounded-full bg-accent px-4 py-2 text-accent-ink transition-opacity duration-150 hover:opacity-90"
+            className="flex-1 rounded-full bg-coral px-4 py-2 text-white transition-opacity duration-150 hover:opacity-90"
           >
             {t('account.save')}
           </button>

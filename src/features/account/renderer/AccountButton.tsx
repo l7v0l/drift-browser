@@ -32,7 +32,7 @@ export function AccountButton() {
       {open && (
         <>
           <div className="fixed inset-0" onMouseDown={() => setOpen(false)} />
-          <div className="absolute end-0 top-10 z-50 w-64 rounded-2xl border border-line bg-surface p-3 shadow-lg">
+          <div className="absolute end-0 top-10 z-50 w-64 rounded-2xl border border-line bg-surface p-3 shadow-hover">
             {account ? (
               <>
                 <div className="truncate font-semibold">{account.name}</div>
@@ -55,7 +55,7 @@ export function AccountButton() {
                   set({ phase: 'welcome', error: null })
                   setOpen(false)
                 }}
-                className="w-full rounded-full bg-accent px-3 py-1.5 text-accent-ink transition-opacity duration-150 hover:opacity-90"
+                className="w-full rounded-full bg-coral px-3 py-1.5 text-white transition-opacity duration-150 hover:opacity-90"
               >
                 {t('account.signIn')}
               </button>

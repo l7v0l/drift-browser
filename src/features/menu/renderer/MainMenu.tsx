@@ -39,7 +39,7 @@ export function MainMenu() {
       {open && (
         <>
           <div className="fixed inset-0" onMouseDown={() => setOpen(false)} />
-          <ul className="absolute end-0 top-10 z-50 min-w-48 rounded-xl border border-line bg-surface p-1 shadow-lg">
+          <ul className="absolute end-0 top-10 z-50 min-w-48 rounded-xl border border-line bg-surface p-1 shadow-hover">
             {items.map(([label, fn]) => (
               <li key={label}>
                 <button

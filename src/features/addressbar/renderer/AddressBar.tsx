@@ -125,7 +125,7 @@ export function AddressBar({ trailing }: { trailing?: ReactNode }) {
       <div className="relative min-w-0 flex-1">
         <div
           className={`flex h-9 items-center gap-2 rounded-full bg-surface-2 px-3 transition-shadow duration-150 ${
-            focused ? 'ring-2 ring-accent' : ''
+            focused ? 'ring-[3px] ring-ring' : ''
           }`}
         >
           {secure && <Icon name="lock" size={15} className="shrink-0 text-accent" />}
@@ -155,7 +155,7 @@ export function AddressBar({ trailing }: { trailing?: ReactNode }) {
             <button
               title={t('zoom.reset')}
               onClick={() => void call('tabs:zoom', 'reset')}
-              className="shrink-0 rounded-full px-2 text-muted tabular-nums transition-colors duration-150 hover:bg-surface-3"
+              className="shrink-0 rounded-full px-2 text-muted font-label tabular-nums transition-colors duration-150 hover:bg-surface-3"
               dir="ltr"
             >
               {Math.round(tab.zoom * 100)}%
@@ -180,7 +180,7 @@ export function AddressBar({ trailing }: { trailing?: ReactNode }) {
         {open && (
           <>
             <div className="fixed inset-0" onMouseDown={() => inputRef.current?.blur()} />
-            <ul className="absolute inset-x-0 top-11 z-50 overflow-hidden rounded-2xl border border-line bg-surface p-1 shadow-lg">
+            <ul className="absolute inset-x-0 top-11 z-50 overflow-hidden rounded-2xl border border-line bg-surface p-1 shadow-hover">
               {items.map((item, i) => (
                 <li key={item.url}>
                   <button

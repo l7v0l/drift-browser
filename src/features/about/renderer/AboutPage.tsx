@@ -23,7 +23,7 @@ export default function AboutPage() {
 
   return (
     <PageShell title={t('about.title')}>
-      <section className="mb-6 rounded-2xl bg-surface p-4">
+      <section className="mb-6 rounded-card bg-surface p-5">
         <h2 className="text-xl font-semibold">{info?.name ?? 'Drift'}</h2>
         <p className="text-muted">{t('app.tagline')}</p>
         {info && (
@@ -40,10 +40,10 @@ export default function AboutPage() {
         )}
       </section>
 
-      <section className="rounded-2xl bg-surface p-4">
+      <section className="rounded-card bg-surface p-5">
         <div className="mb-3 flex items-baseline justify-between">
           <h2 className="text-xl font-semibold">{t('about.memory')}</h2>
-          <span className="text-2xl font-semibold tabular-nums" dir="ltr">
+          <span className="text-2xl font-semibold font-label tabular-nums" dir="ltr">
             {memory ? `${memory.totalMB} MB` : '…'}
           </span>
         </div>
@@ -61,7 +61,7 @@ export default function AboutPage() {
               <span className="min-w-0 flex-1 truncate" dir="auto" title={tab.url}>
                 {tab.title || tab.url}
               </span>
-              <span className="w-24 shrink-0 text-end text-muted tabular-nums" dir="ltr">
+              <span className="w-24 shrink-0 text-end text-muted font-label tabular-nums" dir="ltr">
                 {tab.discarded ? t('about.discarded') : `${tab.memoryMB ?? '–'} MB`}
               </span>
               <button

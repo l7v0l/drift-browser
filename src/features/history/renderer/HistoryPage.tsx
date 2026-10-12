@@ -68,7 +68,7 @@ export default function HistoryPage() {
       {groupByDay(entries, i18n.language).map(([day, items]) => (
         <section key={day} className="mb-6">
           <h2 className="mb-2 font-semibold text-muted">{day}</h2>
-          <ul className="flex flex-col overflow-hidden rounded-2xl bg-surface">
+          <ul className="flex flex-col overflow-hidden rounded-card bg-surface">
             {items.map((e) => (
               <li
                 key={e.visitedAt}

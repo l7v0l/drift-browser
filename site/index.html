@@ -12,103 +12,152 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500&family=Readex+Pro:wght@500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600&family=IBM+Plex+Sans+Arabic:wght@400;500&family=Readex+Pro:wght@600;700&display=swap"
       rel="stylesheet"
     />
     <style>
+      /* Tokens from DESIGN.md "Warm Kinetic Fleet" */
       :root {
-        --bg: #fef9f1;
+        --canvas: #fbf6ee;
         --card: #ffffff;
-        --ink: #0a3f43;
-        --muted: #4f6a6c;
-        --line: #e6dccb;
-        --accent: #16656b;
-        --warm: #f4be4e;
+        --container: #f2ede5;
+        --line: #efe6d8;
+        --ink: #1d1c17;
+        --muted: #5f6869;
+        --primary: #0f5257;
         --coral: #ff7a59;
-        --shadow: 0 10px 30px rgba(10, 63, 67, 0.12);
+        --amber: #ffc857;
+        --glass: rgba(255, 255, 255, 0.9);
+        --ring: rgba(15, 82, 87, 0.14);
+        --shadow-rest: 0 4px 20px -2px rgba(79, 58, 38, 0.04), 0 1px 3px 0 rgba(79, 58, 38, 0.03);
+        --shadow-hover: 0 12px 32px -4px rgba(79, 58, 38, 0.08), 0 2px 6px 0 rgba(79, 58, 38, 0.04);
+        --shadow-header: 0 8px 30px rgba(15, 82, 87, 0.06);
+        --font-display: 'Readex Pro', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+        --font-body: 'IBM Plex Sans Arabic', 'DM Sans', system-ui, sans-serif;
+        --font-label: 'DM Sans', 'IBM Plex Sans Arabic', system-ui, sans-serif;
       }
       @media (prefers-color-scheme: dark) {
         :root {
-          --bg: #2b221c;
-          --card: #3a2f28;
-          --ink: #f1e6d8;
-          --muted: #b3a393;
-          --line: #4f4137;
-          --accent: #f4be4e;
-          --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+          --canvas: #1f1a17;
+          --card: #2a2420;
+          --container: #362e2a;
+          --line: #3d352f;
+          --ink: #fdf9f4;
+          --muted: #d7ccc0;
+          --primary: #30a0a8;
+          --glass: rgba(42, 36, 32, 0.88);
+          --ring: rgba(48, 160, 168, 0.3);
+          --shadow-rest: 0 4px 20px -2px rgba(0, 0, 0, 0.25);
+          --shadow-hover: 0 12px 32px -4px rgba(0, 0, 0, 0.4);
+          --shadow-header: 0 8px 30px rgba(0, 0, 0, 0.3);
         }
       }
       * {
         box-sizing: border-box;
       }
+      html {
+        overflow-x: hidden;
+      }
       body {
         margin: 0;
-        background: var(--bg);
+        background: var(--canvas);
         color: var(--ink);
-        font-family: 'IBM Plex Sans Arabic', 'Readex Pro', system-ui, sans-serif;
-        line-height: 1.6;
-      }
-      :lang(en) body,
-      html[lang='en'] body {
-        font-family: 'Readex Pro', system-ui, sans-serif;
+        font: 400 16px/26px var(--font-body);
+        overflow-x: hidden;
       }
       .wrap {
-        max-width: 1040px;
+        max-width: 1120px;
         margin: 0 auto;
         padding: 0 16px;
       }
-      header {
+
+      /* Floating capsule header */
+      .bar {
+        position: sticky;
+        top: 16px;
+        z-index: 10;
+        margin: 24px auto 0;
+        max-width: 1120px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 20px 0;
+        gap: 12px;
+        padding: 8px 12px 8px 12px;
+        background: var(--glass);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--line);
+        border-radius: 9999px;
+        box-shadow: var(--shadow-header);
       }
       .brand {
         display: flex;
         align-items: center;
-        gap: 12px;
-        font: 600 22px 'Readex Pro', system-ui, sans-serif;
+        gap: 10px;
+        font: 700 20px var(--font-display);
+        padding-inline: 4px;
       }
       .brand img {
-        width: 40px;
-        height: 40px;
+        width: 36px;
+        height: 36px;
+      }
+      .nav {
+        display: flex;
+        gap: 4px;
+      }
+      .nav a {
+        padding: 8px 18px;
+        border-radius: 9999px;
+        color: var(--primary);
+        text-decoration: none;
+        font: 600 15px var(--font-label);
+        transition: background 0.15s;
+      }
+      .nav a:hover {
+        background: var(--container);
+      }
+      .nav a.active {
+        background: var(--primary);
+        color: #fff;
       }
       .lang {
-        border: 1px solid var(--line);
+        border: 1.5px solid var(--line);
         background: var(--card);
-        color: var(--ink);
-        border-radius: 999px;
-        padding: 6px 16px;
-        font: inherit;
+        color: var(--primary);
+        border-radius: 9999px;
+        padding: 8px 18px;
+        font: 600 15px var(--font-label);
         cursor: pointer;
         transition: background 0.15s;
       }
       .lang:hover {
-        background: var(--line);
+        background: var(--container);
       }
+
       .hero {
         text-align: center;
-        padding: 40px 0 24px;
+        padding: 64px 0 24px;
       }
-      .hero img.logo {
+      .hero .logo {
         width: 128px;
         height: 128px;
         animation: float 5s ease-in-out infinite;
       }
       h1 {
-        font: 600 clamp(40px, 8vw, 72px) 'Readex Pro', system-ui, sans-serif;
-        margin: 16px 0 4px;
+        font: 700 clamp(40px, 8vw, 72px) / 1.1 var(--font-display);
+        margin: 20px 0 8px;
         letter-spacing: -0.02em;
       }
       .tag {
-        font-size: 22px;
-        color: var(--muted);
-        margin: 0 0 8px;
+        font: 600 24px var(--font-display);
+        color: var(--primary);
+        margin: 0 0 12px;
       }
       .sub {
         max-width: 560px;
         margin: 0 auto 28px;
         color: var(--muted);
+        font-weight: 500;
       }
       .cta {
         display: inline-flex;
@@ -118,97 +167,140 @@
       }
       .btn {
         display: inline-block;
-        padding: 12px 28px;
-        border-radius: 999px;
+        padding: 14px 30px;
+        border-radius: 9999px;
         text-decoration: none;
-        font-weight: 500;
+        font: 600 15px var(--font-label);
         transition:
           transform 0.15s,
           box-shadow 0.15s;
       }
       .btn:hover {
         transform: translateY(-2px);
-        box-shadow: var(--shadow);
+        box-shadow: var(--shadow-hover);
+      }
+      .btn:active {
+        transform: scale(0.98);
       }
       .btn.primary {
-        background: var(--accent);
+        background: var(--coral);
         color: #fff;
       }
-      @media (prefers-color-scheme: dark) {
-        .btn.primary {
-          color: #2b221c;
-        }
-      }
-      .btn.ghost {
-        border: 1px solid var(--line);
-        color: var(--ink);
-        background: var(--card);
+      .btn.secondary {
+        background: var(--primary);
+        color: #fff;
       }
       .note {
-        margin-top: 12px;
+        margin-top: 14px;
         font-size: 13px;
         color: var(--muted);
       }
+
       .shots {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
-        margin: 40px 0;
+        gap: 24px;
+        margin: 48px 0;
       }
       .shots img {
         width: 100%;
         height: auto;
-        border-radius: 16px;
+        border-radius: 28px;
         border: 1px solid var(--line);
-        box-shadow: var(--shadow);
+        box-shadow: var(--shadow-rest);
       }
       .grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 16px;
-        margin-bottom: 48px;
+        gap: 24px;
+        margin-bottom: 56px;
       }
       .card {
         background: var(--card);
         border: 1px solid var(--line);
-        border-radius: 20px;
-        padding: 20px;
+        border-radius: 28px;
+        padding: 28px;
+        box-shadow: var(--shadow-rest);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-hover);
+      }
+      .card .dot {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-bottom: 12px;
       }
       .card h3 {
         margin: 0 0 6px;
-        font: 600 17px 'Readex Pro', system-ui, sans-serif;
+        font: 600 18px/26px var(--font-display);
       }
       .card p {
         margin: 0;
         color: var(--muted);
+        font-size: 14px;
+        line-height: 22px;
       }
       footer {
         border-top: 1px solid var(--line);
-        padding: 24px 0 40px;
+        padding: 24px 0 48px;
         color: var(--muted);
         display: flex;
         gap: 16px;
         flex-wrap: wrap;
         justify-content: space-between;
+        font: 500 13px var(--font-label);
       }
       footer a {
-        color: var(--accent);
+        color: var(--primary);
       }
+
+      /* Semi-transparent signature across the whole page */
+      .wm {
+        position: fixed;
+        inset: -50%;
+        z-index: 50;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: center;
+        justify-content: center;
+        transform: rotate(-24deg);
+        pointer-events: none;
+        user-select: none;
+        -webkit-user-select: none;
+        color: var(--ink);
+        opacity: 0.07;
+      }
+      .wm span {
+        padding: 34px 46px;
+        font: 600 26px var(--font-display);
+        white-space: nowrap;
+      }
+
       @keyframes float {
         50% {
           transform: translateY(-8px);
         }
       }
-      @media (max-width: 640px) {
+      @media (max-width: 720px) {
+        .nav {
+          display: none;
+        }
         .shots {
           grid-template-columns: 1fr;
         }
       }
       @media (prefers-reduced-motion: reduce) {
-        .hero img.logo {
+        .hero .logo {
           animation: none;
         }
-        .btn {
+        .btn,
+        .card {
           transition: none;
         }
       }
@@ -224,12 +316,22 @@
     </style>
   </head>
   <body>
-    <div class="wrap">
-      <header>
-        <div class="brand"><img src="logo.svg" alt="" />Drift</div>
-        <button class="lang" id="lang" type="button">English</button>
-      </header>
+    <div class="wm" id="wm" aria-hidden="true"></div>
 
+    <header class="bar">
+      <div class="brand"><img src="logo.svg" alt="" />Drift</div>
+      <nav class="nav">
+        <a class="active" href="#top" data-ar>الرئيسية</a>
+        <a class="active" href="#top" data-en>Home</a>
+        <a href="#features" data-ar>المميزات</a>
+        <a href="#features" data-en>Features</a>
+        <a href="https://github.com/l7v0l/drift-browser/releases/latest" data-ar>التحميل</a>
+        <a href="https://github.com/l7v0l/drift-browser/releases/latest" data-en>Download</a>
+      </nav>
+      <button class="lang" id="lang" type="button">English</button>
+    </header>
+
+    <div class="wrap" id="top">
       <section class="hero">
         <img class="logo" src="logo.svg" alt="Drift logo" />
         <h1>Drift</h1>
@@ -255,10 +357,14 @@
             data-en
             >Download for Windows</a
           >
-          <a class="btn ghost" href="https://github.com/l7v0l/drift-browser">GitHub</a>
+          <a class="btn secondary" href="https://github.com/l7v0l/drift-browser">GitHub</a>
         </div>
-        <p class="note" data-ar>مجاني ومفتوح المصدر (MIT). النسخة غير موقّعة بعد، فقد يظهر تحذير SmartScreen.</p>
-        <p class="note" data-en>Free and open source (MIT). Builds are not signed yet, so SmartScreen may warn.</p>
+        <p class="note" data-ar>
+          مجاني ومفتوح المصدر (MIT). النسخة غير موقّعة بعد، فقد يظهر تحذير SmartScreen.
+        </p>
+        <p class="note" data-en>
+          Free and open source (MIT). Builds are not signed yet, so SmartScreen may warn.
+        </p>
       </section>
 
       <section class="shots">
@@ -266,26 +372,32 @@
         <img src="img/newtab-en-dark.png" alt="Drift new tab page, dark theme" />
       </section>
 
-      <section class="grid">
+      <section class="grid" id="features">
         <div class="card">
+          <span class="dot" style="background: var(--primary)"></span>
           <h3 data-ar>تبويبات ذكية</h3>
           <h3 data-en>Smart tabs</h3>
           <p data-ar>سحب وتثبيت وإعادة فتح المغلق، وتعليق الخامل تلقائياً لتوفير الذاكرة.</p>
           <p data-en>Drag, pin, reopen closed tabs, and idle tabs are discarded to save memory.</p>
         </div>
         <div class="card">
+          <span class="dot" style="background: var(--coral)"></span>
           <h3 data-ar>عربي أولاً</h3>
           <h3 data-en>Arabic first</h3>
           <p data-ar>واجهة RTL كاملة، والتاريخ الهجري والميلادي في صفحة البداية.</p>
           <p data-en>Full RTL interface, with Hijri and Gregorian dates on the new tab page.</p>
         </div>
         <div class="card">
+          <span class="dot" style="background: var(--amber)"></span>
           <h3 data-ar>خصوصية</h3>
           <h3 data-en>Private</h3>
           <p data-ar>نوافذ خاصة لا تحفظ شيئاً، وصفحات داخلية معزولة بعزل صارم للعمليات.</p>
-          <p data-en>Private windows save nothing; internal pages run behind a strict, typed IPC bridge.</p>
+          <p data-en>
+            Private windows save nothing; internal pages run behind a strict, typed IPC bridge.
+          </p>
         </div>
         <div class="card">
+          <span class="dot" style="background: #b9a7ff"></span>
           <h3 data-ar>خفيف</h3>
           <h3 data-en>Light</h3>
           <p data-ar>تحميل كسول وبدء سريع، وصفحة تعرض استهلاك الذاكرة لكل تبويب.</p>
@@ -304,6 +416,14 @@
     </div>
 
     <script>
+      // Fill the rotated watermark layer with the signature.
+      var wm = document.getElementById('wm')
+      for (var i = 0; i < 420; i++) {
+        var s = document.createElement('span')
+        s.textContent = 'علي قاسم'
+        wm.appendChild(s)
+      }
+
       var btn = document.getElementById('lang')
       function setLang(lang) {
         document.documentElement.lang = lang

@@ -1,27 +1,49 @@
+@import '@fontsource/readex-pro/arabic-600.css';
+@import '@fontsource/readex-pro/latin-600.css';
+@import '@fontsource/ibm-plex-sans-arabic/arabic-400.css';
+@import '@fontsource/ibm-plex-sans-arabic/arabic-500.css';
+@import '@fontsource/ibm-plex-sans-arabic/latin-400.css';
+@import '@fontsource/ibm-plex-sans-arabic/latin-500.css';
+@import '@fontsource/dm-sans/latin-500.css';
+@import '@fontsource/dm-sans/latin-600.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Tokens from DESIGN.md "Warm Kinetic Fleet": warm cream canvas, white cards, teal primary. */
 :root {
-  --surface: #fffdf8;
-  --surface-2: #f3ebdd;
-  --surface-3: #e8dcc8;
-  --ink: #1c2b2c;
-  --muted: #6b7a7b;
-  --line: #ddd2bf;
-  --accent: #16656b;
+  --surface: #ffffff; /* cards, active tab, toolbar */
+  --surface-2: #fbf6ee; /* canvas */
+  --surface-3: #f2ede5; /* hover / containers */
+  --ink: #1d1c17;
+  --muted: #6b7475;
+  --line: #efe6d8;
+  --accent: #0f5257; /* primary teal */
   --accent-ink: #ffffff;
+  --coral: #ff7a59; /* primary CTA */
+  --amber: #ffc857;
+  --ring: rgba(15, 82, 87, 0.14);
+  --scrim: rgba(31, 26, 23, 0.45);
+  --shadow-rest: 0 4px 20px -2px rgba(79, 58, 38, 0.04), 0 1px 3px 0 rgba(79, 58, 38, 0.03);
+  --shadow-hover: 0 12px 32px -4px rgba(79, 58, 38, 0.08), 0 2px 6px 0 rgba(79, 58, 38, 0.04);
+  --shadow-modal: 0 24px 64px -8px rgba(31, 26, 23, 0.16);
 }
 
+/* Warm espresso dark mode */
 :root[data-theme='dark'] {
-  --surface: #3a2f28;
-  --surface-2: #2b221c;
-  --surface-3: #4a3d34;
-  --ink: #f1e6d8;
-  --muted: #b3a393;
-  --line: #4f4137;
-  --accent: #f4be4e;
-  --accent-ink: #2b221c;
+  --surface: #2a2420;
+  --surface-2: #1f1a17;
+  --surface-3: #362e2a;
+  --ink: #fdf9f4;
+  --muted: #b3a89b;
+  --line: #3d352f;
+  --accent: #30a0a8;
+  --accent-ink: #1f1a17;
+  --ring: rgba(48, 160, 168, 0.3);
+  --shadow-rest: 0 4px 20px -2px rgba(0, 0, 0, 0.25), 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+  --shadow-hover: 0 12px 32px -4px rgba(0, 0, 0, 0.4), 0 2px 6px 0 rgba(0, 0, 0, 0.25);
+  --shadow-modal: 0 24px 64px -8px rgba(0, 0, 0, 0.5);
 }
 
 html,
@@ -32,8 +54,15 @@ body,
   /* The UI view is transparent so the page view shows through below the chrome. */
   background: transparent;
   color: var(--ink);
-  font-family: system-ui, sans-serif;
+  /* Body: IBM Plex Sans Arabic. Headlines: Readex Pro. Labels and digits: DM Sans. */
+  font-family: 'IBM Plex Sans Arabic', 'DM Sans', system-ui, sans-serif;
   user-select: none;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Readex Pro', 'IBM Plex Sans Arabic', system-ui, sans-serif;
 }
 
 /* rem stays 16px so Tailwind sizes match the pixel layout constants in shared/constants.ts. */
@@ -43,7 +72,8 @@ html {
 }
 
 body {
-  font-size: 13px;
+  font-size: 14px;
+  line-height: 1.4;
 }
 
 /* Intro animation (features/splash). Wave draws itself, arrow springs forward. */

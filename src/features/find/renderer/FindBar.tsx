@@ -46,10 +46,10 @@ export function FindBar() {
           if (e.key === 'Enter') step(!e.shiftKey)
           else if (e.key === 'Escape') close()
         }}
-        className="h-8 w-64 rounded-full border border-line bg-surface-2 px-4 outline-none focus:ring-2 focus:ring-accent"
+        className="h-8 w-64 rounded-full border border-line bg-surface-2 px-4 outline-none focus:ring-[3px] focus:ring-ring focus:border-accent"
         style={{ userSelect: 'text' }}
       />
-      <span className="min-w-16 text-center text-muted tabular-nums" dir="ltr">
+      <span className="min-w-16 text-center text-muted font-label tabular-nums" dir="ltr">
         {text ? `${result.active}/${result.total}` : ''}
       </span>
       <button

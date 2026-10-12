@@ -31,7 +31,7 @@ export function DownloadsButton() {
       {open && (
         <>
           <div className="fixed inset-0" onMouseDown={() => setOpen(false)} />
-          <div className="absolute end-0 top-10 z-50 w-80 rounded-2xl border border-line bg-surface-2 p-2 shadow-lg">
+          <div className="absolute end-0 top-10 z-50 w-80 rounded-2xl border border-line bg-surface-2 p-2 shadow-hover">
             {items.length === 0 ? (
               <p className="p-3 text-muted">{t('downloads.empty')}</p>
             ) : (
