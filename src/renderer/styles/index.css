@@ -2,9 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --surface: #fffdf8;
+  --surface-2: #f3ebdd;
+  --surface-3: #e8dcc8;
+  --ink: #1c2b2c;
+  --muted: #6b7a7b;
+  --line: #ddd2bf;
+  --accent: #16656b;
+  --accent-ink: #ffffff;
+}
+
+:root[data-theme='dark'] {
+  --surface: #3a2f28;
+  --surface-2: #2b221c;
+  --surface-3: #4a3d34;
+  --ink: #f1e6d8;
+  --muted: #b3a393;
+  --line: #4f4137;
+  --accent: #f4be4e;
+  --accent-ink: #2b221c;
+}
+
 html,
 body,
 #root {
   height: 100%;
   margin: 0;
+  /* The UI view is transparent so the page view shows through below the chrome. */
+  background: transparent;
+  color: var(--ink);
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  user-select: none;
 }

@@ -2,7 +2,7 @@ import { resolve } from 'node:path'
 import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
 import react from '@vitejs/plugin-react'
 
-const shared = { '@shared': resolve('src/shared') }
+const shared = { '@shared': resolve('src/shared'), '@features': resolve('src/features') }
 
 export default defineConfig({
   main: {
@@ -16,12 +16,6 @@ export default defineConfig({
   },
   renderer: {
     plugins: [react()],
-    resolve: {
-      alias: {
-        ...shared,
-        '@renderer': resolve('src/renderer'),
-        '@features': resolve('src/features')
-      }
-    }
+    resolve: { alias: { ...shared, '@renderer': resolve('src/renderer') } }
   }
 })

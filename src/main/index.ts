@@ -1,49 +1,33 @@
-import { join } from 'node:path'
-import { app, BrowserWindow, shell } from 'electron'
+import { app, BrowserWindow } from 'electron'
 import { registerIpc } from './ipc'
+import { registerDriftHandler, registerDriftScheme } from './protocol'
+import { AppWindow } from './window'
 
-let mainWindow: BrowserWindow | null = null
+let current: AppWindow | null = null
 
-function createWindow(): BrowserWindow {
-  const win = new BrowserWindow({
-    width: 1280,
-    height: 800,
-    minWidth: 480,
-    minHeight: 320,
-    show: false,
-    title: 'Drift',
-    icon: join(__dirname, '../../build/icon.png'),
-    webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
-      contextIsolation: true,
-      sandbox: true,
-      nodeIntegration: false
-    }
+registerDriftScheme()
+
+if (!app.requestSingleInstanceLock()) {
+  app.quit()
+} else {
+  app.on('second-instance', () => {
+    const win = current?.win
+    if (!win) return
+    if (win.isMinimized()) win.restore()
+    win.focus()
   })
-  win.once('ready-to-show', () => win.show())
-  win.webContents.setWindowOpenHandler(({ url }) => {
-    void shell.openExternal(url)
-    return { action: 'deny' }
+
+  void app.whenReady().then(() => {
+    registerDriftHandler()
+    registerIpc(() => current)
+    current = new AppWindow()
+    app.on('activate', () => {
+      if (BrowserWindow.getAllWindows().length === 0) current = new AppWindow()
+    })
   })
-  if (process.env['ELECTRON_RENDERER_URL']) {
-    void win.loadURL(process.env['ELECTRON_RENDERER_URL'])
-  } else {
-    void win.loadFile(join(__dirname, '../renderer/index.html'))
-  }
-  win.on('closed', () => {
-    mainWindow = null
+
+  app.on('before-quit', () => current?.tabs.flush())
+  app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') app.quit()
   })
-  return win
 }
-
-void app.whenReady().then(() => {
-  registerIpc(() => mainWindow)
-  mainWindow = createWindow()
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) mainWindow = createWindow()
-  })
-})
-
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit()
-})

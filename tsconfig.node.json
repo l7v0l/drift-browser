@@ -8,7 +8,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "types": ["node"],
-    "paths": { "@shared/*": ["./src/shared/*"] }
+    "paths": { "@shared/*": ["./src/shared/*"], "@features/*": ["./src/features/*"] }
   },
   "include": [
     "electron.vite.config.ts",

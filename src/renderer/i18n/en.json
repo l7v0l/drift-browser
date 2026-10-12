@@ -1,1 +1,19 @@
-{ "app": { "tagline": "Browse light." } }
+{
+  "app": { "tagline": "Browse light." },
+  "tab": {
+    "new": "New tab",
+    "newTitle": "New tab",
+    "close": "Close tab",
+    "pin": "Pin tab",
+    "unpin": "Unpin tab",
+    "reopen": "Reopen closed tab"
+  },
+  "nav": {
+    "back": "Back",
+    "forward": "Forward",
+    "reload": "Reload",
+    "stop": "Stop",
+    "home": "Home"
+  },
+  "address": { "placeholder": "Search or enter address" }
+}

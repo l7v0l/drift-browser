@@ -17,3 +17,45 @@ export const DEFAULT_SETTINGS: Settings = {
   homepage: 'drift://newtab',
   showBookmarksBar: true
 }
+
+export interface TabInfo {
+  id: number
+  url: string
+  title: string
+  favicon: string | null
+  loading: boolean
+  canGoBack: boolean
+  canGoForward: boolean
+  pinned: boolean
+  /** True when the tab has no live page (restored or unloaded) and loads on activation. */
+  discarded: boolean
+}
+
+export interface TabsState {
+  tabs: TabInfo[]
+  activeId: number | null
+}
+
+export interface SavedTab {
+  url: string
+  title: string
+  favicon: string | null
+  pinned: boolean
+}
+
+export interface SessionData {
+  tabs: SavedTab[]
+  activeIndex: number
+}
+
+export interface HistoryEntry {
+  url: string
+  title: string
+  visitedAt: number
+}
+
+export interface Suggestion {
+  url: string
+  title: string
+  source: 'history' | 'bookmark'
+}
