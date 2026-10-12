@@ -1,7 +1,7 @@
 {
   "name": "drift-browser",
   "productName": "Drift",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Drift - Browse light.",
   "main": "./out/main/index.js",
   "author": "l7v0l",
