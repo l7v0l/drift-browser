@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Terms of Service — Drift</title>
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600&family=IBM+Plex+Sans+Arabic:wght@400;500&family=Readex+Pro:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root { --canvas:#fbf6ee; --card:#fff; --line:#efe6d8; --ink:#1d1c17; --muted:#5f6869; --primary:#0f5257; }
+      @media (prefers-color-scheme: dark) {
+        :root { --canvas:#1f1a17; --card:#2a2420; --line:#3d352f; --ink:#fdf9f4; --muted:#d7ccc0; --primary:#30a0a8; }
+      }
+      body { margin:0; background:var(--canvas); color:var(--ink); font:400 16px/28px 'IBM Plex Sans Arabic','DM Sans',system-ui,sans-serif; }
+      main { max-width:760px; margin:48px auto; padding:0 16px; }
+      .card { background:var(--card); border:1px solid var(--line); border-radius:28px; padding:32px; }
+      h1,h2 { font-family:'Readex Pro','IBM Plex Sans Arabic',system-ui,sans-serif; }
+      h1 { font-size:32px; margin:0 0 8px; } h2 { font-size:20px; margin:28px 0 4px; }
+      p, li { color:var(--muted); } a { color:var(--primary); }
+      .top { display:flex; justify-content:space-between; margin-bottom:16px; font:600 15px 'DM Sans',sans-serif; }
+      [data-en] { display:none; } html[lang='en'] [data-en] { display:revert; } html[lang='en'] [data-ar] { display:none; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="top"><a href="./">← Drift</a><a href="#" id="lang">English</a></div>
+      <div class="card">
+        <div data-ar><h1>شروط الاستخدام</h1><p>آخر تحديث: 12 أكتوبر 2026</p>
+<h2>الترخيص</h2><p>Drift برنامج مجاني ومفتوح المصدر بترخيص MIT، ويمكنك استخدامه وتعديله وتوزيعه وفق الترخيص في <a href="https://github.com/l7v0l/drift-browser/blob/main/LICENSE">LICENSE</a>.</p>
+<h2>بدون ضمان</h2><p>يُقدَّم البرنامج «كما هو» دون أي ضمان. أنت مسؤول عن استخدامك له وعن المواقع التي تزورها.</p>
+<h2>الخصوصية</h2><p>تفاصيل التعامل مع بياناتك في <a href="privacy.html">سياسة الخصوصية</a>.</p>
+<h2>تواصل</h2><p><a href="https://github.com/l7v0l/drift-browser/issues">GitHub Issues</a></p></div>
+        <div data-en><h1>Terms of Service</h1><p>Last updated: October 12, 2026</p>
+<h2>License</h2><p>Drift is free, open-source software under the MIT license. You may use, modify and distribute it under the terms in <a href="https://github.com/l7v0l/drift-browser/blob/main/LICENSE">LICENSE</a>.</p>
+<h2>No warranty</h2><p>The software is provided "as is" without warranty of any kind. You are responsible for your use of it and for the sites you visit.</p>
+<h2>Privacy</h2><p>How your data is handled is described in the <a href="privacy.html">Privacy Policy</a>.</p>
+<h2>Contact</h2><p><a href="https://github.com/l7v0l/drift-browser/issues">GitHub Issues</a></p></div>
+      </div>
+    </main>
+    <script>
+      var l = document.getElementById('lang')
+      l.addEventListener('click', function (e) {
+        e.preventDefault()
+        var en = document.documentElement.lang === 'ar'
+        document.documentElement.lang = en ? 'en' : 'ar'
+        document.documentElement.dir = en ? 'ltr' : 'rtl'
+        l.textContent = en ? 'العربية' : 'English'
+      })
+    </script>
+  </body>
+</html>
