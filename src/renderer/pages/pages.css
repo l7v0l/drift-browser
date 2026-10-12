@@ -3,6 +3,14 @@ html,
 body {
   background: var(--surface-2);
   user-select: auto;
+  font-size: 15px;
+}
+
+html {
+  overflow: hidden;
+}
+
+body {
   overflow-y: auto;
 }
 

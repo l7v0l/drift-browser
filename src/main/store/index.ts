@@ -1,6 +1,7 @@
 import Store from 'electron-store'
 import {
   DEFAULT_SETTINGS,
+  type Account,
   type Bookmark,
   type DownloadInfo,
   type HistoryEntry,
@@ -16,6 +17,7 @@ interface StoreSchema {
   bookmarks: Bookmark[]
   shortcuts: ShortcutItem[]
   downloads: DownloadInfo[]
+  account: Account | null
 }
 
 export const store = new Store<StoreSchema>({
@@ -31,7 +33,8 @@ export const store = new Store<StoreSchema>({
       { id: 'wikipedia', title: 'Wikipedia', url: 'https://www.wikipedia.org' },
       { id: 'github', title: 'GitHub', url: 'https://github.com' }
     ],
-    downloads: []
+    downloads: [],
+    account: null
   }
 })
 

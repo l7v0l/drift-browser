@@ -10,6 +10,8 @@ export interface Settings {
   showBookmarksBar: boolean
   /** Unload background tabs idle this long to free memory. 0 disables discarding. */
   discardAfterMinutes: number
+  /** True once the welcome / sign-in prompt was answered or skipped. */
+  onboardingDone: boolean
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -18,7 +20,8 @@ export const DEFAULT_SETTINGS: Settings = {
   searchEngine: 'google',
   homepage: 'drift://newtab',
   showBookmarksBar: true,
-  discardAfterMinutes: 30
+  discardAfterMinutes: 30,
+  onboardingDone: false
 }
 
 export interface TabInfo {
@@ -96,6 +99,17 @@ export interface DownloadInfo {
 
 export interface WindowInfo {
   private: boolean
+  /** First normal window of this launch: shows the intro animation and welcome prompt. */
+  intro: boolean
+}
+
+export type AccountProvider = 'google' | 'microsoft'
+
+export interface Account {
+  provider: AccountProvider
+  email: string
+  name: string
+  picture: string | null
 }
 
 export interface FindResult {

@@ -95,5 +95,20 @@
     "tabsSummary": "{{loaded}} تبويب نشط، {{discarded}} معلّق",
     "discarded": "معلّق",
     "discard": "تعليق"
+  },
+  "account": {
+    "title": "الحساب",
+    "welcomeTitle": "مرحباً بك في Drift",
+    "welcomeText": "سجّل الدخول بحسابك ليكون بريدك جاهزاً عند تسجيل الدخول في مواقع Google وMicrosoft.",
+    "google": "المتابعة مع Google",
+    "microsoft": "المتابعة مع Microsoft (Hotmail / Outlook)",
+    "notNow": "ليس الآن",
+    "waiting": "أكمل تسجيل الدخول في نافذة المتصفح…",
+    "saveQuestion": "هل تريد حفظ هذا الحساب على هذا الجهاز؟",
+    "save": "حفظ",
+    "signIn": "تسجيل الدخول",
+    "signOut": "تسجيل الخروج",
+    "notConfigured": "تسجيل الدخول غير مُعدّ بعد. راجع docs/SIGN_IN.md.",
+    "failed": "تعذّر تسجيل الدخول. حاول مرة أخرى."
   }
 }

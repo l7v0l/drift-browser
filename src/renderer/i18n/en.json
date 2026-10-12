@@ -95,5 +95,20 @@
     "tabsSummary": "{{loaded}} active, {{discarded}} discarded",
     "discarded": "Discarded",
     "discard": "Discard"
+  },
+  "account": {
+    "title": "Account",
+    "welcomeTitle": "Welcome to Drift",
+    "welcomeText": "Sign in so your email is ready when you sign in to Google and Microsoft sites.",
+    "google": "Continue with Google",
+    "microsoft": "Continue with Microsoft (Hotmail / Outlook)",
+    "notNow": "Not now",
+    "waiting": "Finish signing in in your browser window…",
+    "saveQuestion": "Save this account on this device?",
+    "save": "Save",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "notConfigured": "Sign-in is not configured yet. See docs/SIGN_IN.md.",
+    "failed": "Sign-in failed. Please try again."
   }
 }

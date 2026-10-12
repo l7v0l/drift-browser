@@ -1,6 +1,8 @@
 import type {
-  Bookmark,
+  Account,
+  AccountProvider,
   AppInfo,
+  Bookmark,
   ClearRange,
   DownloadInfo,
   FindResult,
@@ -27,6 +29,11 @@ export interface IpcInvokeMap {
   'app:info': Req<[], AppInfo>
   'app:memory': Req<[], MemoryInfo>
   'window:info': Req<[], WindowInfo>
+  'account:get': Req<[], Account | null>
+  'account:sign-in': Req<[provider: AccountProvider], Account>
+  'account:confirm': Req<[save: boolean], Account | null>
+  'account:cancel': Req
+  'account:sign-out': Req
   'window:new': Req<[isPrivate: boolean]>
   'tabs:state': Req<[], TabsState>
   'tabs:create': Req<[url?: string]>
@@ -71,6 +78,7 @@ export interface IpcEventMap {
   'ui:open-find': null
   'find:result': FindResult
   'bookmarks:changed': Bookmark[]
+  'account:changed': Account | null
   'downloads:changed': DownloadInfo[]
 }
 
@@ -92,6 +100,11 @@ const invokeAllow: Record<InvokeChannel, true> = {
   'app:info': true,
   'app:memory': true,
   'window:info': true,
+  'account:get': true,
+  'account:sign-in': true,
+  'account:confirm': true,
+  'account:cancel': true,
+  'account:sign-out': true,
   'window:new': true,
   'tabs:state': true,
   'tabs:create': true,
@@ -135,6 +148,7 @@ const eventAllow: Record<EventChannel, true> = {
   'ui:open-find': true,
   'find:result': true,
   'bookmarks:changed': true,
+  'account:changed': true,
   'downloads:changed': true
 }
 
@@ -149,6 +163,8 @@ export const PAGE_INVOKE_CHANNELS: ReadonlySet<InvokeChannel> = new Set<InvokeCh
   'app:memory',
   'tabs:discard',
   'window:info',
+  'account:get',
+  'account:sign-out',
   'tabs:navigate',
   'tabs:create',
   'bookmarks:list',

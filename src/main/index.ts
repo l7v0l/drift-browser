@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from 'electron'
 import { registerIpc } from './ipc'
 import { registerDriftScheme } from './protocol'
+import { setupAutoUpdate } from './updater'
 import { AppWindow } from './window'
 
 registerDriftScheme()
@@ -18,6 +19,7 @@ if (!app.requestSingleInstanceLock()) {
   void app.whenReady().then(() => {
     registerIpc()
     AppWindow.open(false)
+    setupAutoUpdate()
     app.on('activate', () => {
       if (BrowserWindow.getAllWindows().length === 0) AppWindow.open(false)
     })

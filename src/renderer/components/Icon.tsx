@@ -16,6 +16,7 @@ const PATHS = {
   menu: 'M12 5h.01M12 12h.01M12 19h.01',
   folder: 'M3 7h6l2 2h10v10H3z',
   trash: 'M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13',
+  user: 'M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM4 20c0-4 4-6 8-6s8 2 8 6',
   eye: 'M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z'
 } as const
 

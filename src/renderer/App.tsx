@@ -6,6 +6,9 @@ import { DownloadsButton } from '@features/downloads/renderer/DownloadsButton'
 import { startDownloadsSync } from '@features/downloads/renderer/store'
 import { FindBar } from '@features/find/renderer/FindBar'
 import { useFind } from '@features/find/renderer/store'
+import { AccountButton } from '@features/account/renderer/AccountButton'
+import { Onboarding } from '@features/account/renderer/Onboarding'
+import { startAccountSync } from '@features/account/renderer/store'
 import { MainMenu } from '@features/menu/renderer/MainMenu'
 import { TabStrip } from '@features/tabs/renderer/TabStrip'
 import { startTabsSync, useTabs } from '@features/tabs/renderer/store'
@@ -18,16 +21,21 @@ export function App() {
   const { t } = useTranslation()
   const showBar = useSettings((s) => s.settings.showBookmarksBar)
   const [isPrivate, setPrivate] = useState(false)
+  const [intro, setIntro] = useState(false)
   const findOpen = useFind((s) => s.open)
   const activeId = useTabs((s) => s.activeId)
   useAppearance()
 
   useEffect(() => {
-    void window.drift.invoke('window:info').then((i) => setPrivate(i.private))
+    void window.drift.invoke('window:info').then((i) => {
+      setPrivate(i.private)
+      setIntro(i.intro)
+    })
     const stops = [
       startTabsSync(),
       startBookmarksSync(),
       startDownloadsSync(),
+      startAccountSync(),
       window.drift.on('find:result', (r) => useFind.getState().setResult(r)),
       window.drift.on('ui:open-find', () => useFind.getState().setOpen(true))
     ]
@@ -59,12 +67,14 @@ export function App() {
         trailing={
           <>
             <DownloadsButton />
+            {!isPrivate && <AccountButton />}
             <MainMenu />
           </>
         }
       />
       {showBar && <BookmarksBar />}
       {findOpen && <FindBar />}
+      <Onboarding intro={intro} />
     </header>
   )
 }

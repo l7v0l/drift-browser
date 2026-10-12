@@ -26,7 +26,7 @@ function Clock() {
 
   return (
     <div className="text-center">
-      <div className="text-7xl font-semibold tabular-nums" dir="ltr">
+      <div className="whitespace-nowrap text-7xl font-semibold tabular-nums">
         {now.toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' })}
       </div>
       <div className="mt-2 text-lg">{fmt('islamic-umalqura')}</div>

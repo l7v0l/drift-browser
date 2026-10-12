@@ -7,11 +7,14 @@ import { recordVisit } from '@features/history/main/history'
 import { TabManager } from '@features/tabs/main/tab-manager'
 import { bindShortcuts, type ShortcutId } from '@features/tabs/main/shortcuts'
 import { send } from './ipc/send'
+import { attachLoginHint } from '@features/account/main/attach'
 import { registerDriftHandler } from './protocol'
+import { accountService } from './services'
 import { getSettings, store } from './store'
 
 let normalDownloads: DownloadManager | null = null
 let privateCount = 0
+let hasShownIntro = false
 
 /**
  * One browser window = a BrowserWindow holding the chrome UI view (React) plus one
@@ -26,6 +29,8 @@ export class AppWindow {
   readonly tabs: TabManager
   readonly downloads: DownloadManager
   readonly isPrivate: boolean
+  /** First normal window of the launch: shows the intro animation and welcome prompt. */
+  readonly intro: boolean
   private readonly primary: boolean
   private chromeHeight = CHROME_HEIGHT
   private overlay = false
@@ -49,10 +54,13 @@ export class AppWindow {
   private constructor(isPrivate: boolean) {
     this.isPrivate = isPrivate
     this.primary = !isPrivate && ![...AppWindow.all].some((w) => !w.isPrivate)
+    this.intro = this.primary && !hasShownIntro
+    if (this.intro) hasShownIntro = true
     // Private partitions have no "persist:" prefix, so cookies and cache stay in memory only.
     const partition = isPrivate ? `drift-private-${++privateCount}` : NORMAL_PARTITION
     const ses = session.fromPartition(partition)
     registerDriftHandler(ses)
+    if (!isPrivate) attachLoginHint(ses, () => accountService.get()?.email ?? null)
 
     if (isPrivate) this.downloads = new DownloadManager(ses, false)
     else this.downloads = normalDownloads ??= new DownloadManager(ses, true)

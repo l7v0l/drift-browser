@@ -11,6 +11,7 @@ import {
 } from '@features/bookmarks/main/bookmarks'
 import { clearHistory, listHistory, removeEntry } from '@features/history/main/history'
 import { listShortcuts, setShortcuts } from '@features/newtab/main/shortcuts'
+import { accountService } from '../services'
 import { AppWindow } from '../window'
 import { getSettings, patchSettings } from '../store'
 
@@ -18,7 +19,7 @@ type Handlers = {
   [C in InvokeChannel]: (
     win: AppWindow,
     ...args: IpcInvokeMap[C]['args']
-  ) => IpcInvokeMap[C]['result']
+  ) => IpcInvokeMap[C]['result'] | Promise<IpcInvokeMap[C]['result']>
 }
 
 /**
@@ -54,7 +55,12 @@ export function registerIpc(): void {
         app.getAppMetrics().map((m) => ({ pid: m.pid, workingSetKB: m.memory.workingSetSize })),
         w.tabs.processIds()
       ),
-    'window:info': (w) => ({ private: w.isPrivate }),
+    'window:info': (w) => ({ private: w.isPrivate, intro: w.intro }),
+    'account:get': () => accountService.get(),
+    'account:sign-in': (_w, provider) => accountService.signIn(provider),
+    'account:confirm': (_w, save) => accountService.confirm(Boolean(save)),
+    'account:cancel': () => accountService.cancel(),
+    'account:sign-out': () => accountService.signOut(),
     'window:new': (_w, isPrivate) => {
       AppWindow.open(Boolean(isPrivate))
     },
