@@ -12,6 +12,7 @@ function createWindow(): BrowserWindow {
     minHeight: 320,
     show: false,
     title: 'Drift',
+    icon: join(__dirname, '../../build/icon.png'),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       contextIsolation: true,

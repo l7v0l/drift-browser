@@ -14,9 +14,13 @@
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "assets": "node scripts/build-assets.mjs"
   },
   "dependencies": {
+    "@fontsource/dm-sans": "^5.3.0",
+    "@fontsource/ibm-plex-sans-arabic": "^5.3.0",
+    "@fontsource/readex-pro": "^5.3.0",
     "electron-store": "^11.0.2",
     "i18next": "^26.4.4",
     "react": "^19.3.0",
@@ -37,8 +41,11 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.13.0",
+    "opentype.js": "^2.0.0",
+    "png2icons": "^2.0.1",
     "postcss": "^8.5.29",
     "prettier": "^3.9.10",
+    "sharp": "^0.35.5",
     "tailwindcss": "^3.4.19",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.71.1",
