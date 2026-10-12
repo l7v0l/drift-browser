@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Drift — Browse light.</title>
+    <meta
+      name="description"
+      content="Drift is a small, fast desktop browser with first-class Arabic (RTL) and English support."
+    />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500&family=Readex+Pro:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #fef9f1;
+        --card: #ffffff;
+        --ink: #0a3f43;
+        --muted: #4f6a6c;
+        --line: #e6dccb;
+        --accent: #16656b;
+        --warm: #f4be4e;
+        --coral: #ff7a59;
+        --shadow: 0 10px 30px rgba(10, 63, 67, 0.12);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #2b221c;
+          --card: #3a2f28;
+          --ink: #f1e6d8;
+          --muted: #b3a393;
+          --line: #4f4137;
+          --accent: #f4be4e;
+          --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: 'IBM Plex Sans Arabic', 'Readex Pro', system-ui, sans-serif;
+        line-height: 1.6;
+      }
+      :lang(en) body,
+      html[lang='en'] body {
+        font-family: 'Readex Pro', system-ui, sans-serif;
+      }
+      .wrap {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 0 16px;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 0;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font: 600 22px 'Readex Pro', system-ui, sans-serif;
+      }
+      .brand img {
+        width: 40px;
+        height: 40px;
+      }
+      .lang {
+        border: 1px solid var(--line);
+        background: var(--card);
+        color: var(--ink);
+        border-radius: 999px;
+        padding: 6px 16px;
+        font: inherit;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .lang:hover {
+        background: var(--line);
+      }
+      .hero {
+        text-align: center;
+        padding: 40px 0 24px;
+      }
+      .hero img.logo {
+        width: 128px;
+        height: 128px;
+        animation: float 5s ease-in-out infinite;
+      }
+      h1 {
+        font: 600 clamp(40px, 8vw, 72px) 'Readex Pro', system-ui, sans-serif;
+        margin: 16px 0 4px;
+        letter-spacing: -0.02em;
+      }
+      .tag {
+        font-size: 22px;
+        color: var(--muted);
+        margin: 0 0 8px;
+      }
+      .sub {
+        max-width: 560px;
+        margin: 0 auto 28px;
+        color: var(--muted);
+      }
+      .cta {
+        display: inline-flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .btn {
+        display: inline-block;
+        padding: 12px 28px;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 500;
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s;
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+      }
+      .btn.primary {
+        background: var(--accent);
+        color: #fff;
+      }
+      @media (prefers-color-scheme: dark) {
+        .btn.primary {
+          color: #2b221c;
+        }
+      }
+      .btn.ghost {
+        border: 1px solid var(--line);
+        color: var(--ink);
+        background: var(--card);
+      }
+      .note {
+        margin-top: 12px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .shots {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin: 40px 0;
+      }
+      .shots img {
+        width: 100%;
+        height: auto;
+        border-radius: 16px;
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow);
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 16px;
+        margin-bottom: 48px;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        padding: 20px;
+      }
+      .card h3 {
+        margin: 0 0 6px;
+        font: 600 17px 'Readex Pro', system-ui, sans-serif;
+      }
+      .card p {
+        margin: 0;
+        color: var(--muted);
+      }
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 0 40px;
+        color: var(--muted);
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+      footer a {
+        color: var(--accent);
+      }
+      @keyframes float {
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+      @media (max-width: 640px) {
+        .shots {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .hero img.logo {
+          animation: none;
+        }
+        .btn {
+          transition: none;
+        }
+      }
+      [data-en] {
+        display: none;
+      }
+      html[lang='en'] [data-en] {
+        display: revert;
+      }
+      html[lang='en'] [data-ar] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="brand"><img src="/logo.svg" alt="" />Drift</div>
+        <button class="lang" id="lang" type="button">English</button>
+      </header>
+
+      <section class="hero">
+        <img class="logo" src="/logo.svg" alt="Drift logo" />
+        <h1>Drift</h1>
+        <p class="tag" data-ar>تصفّح بخفة.</p>
+        <p class="tag" data-en>Browse light.</p>
+        <p class="sub" data-ar>
+          متصفح سطح مكتب صغير وسريع، يدعم العربية (RTL) والإنجليزية من الأساس، ويحافظ على ذاكرتك.
+        </p>
+        <p class="sub" data-en>
+          A small, fast desktop browser with first-class Arabic (RTL) and English support, kind to
+          your memory.
+        </p>
+        <div class="cta">
+          <a
+            class="btn primary"
+            href="https://github.com/l7v0l/drift-browser/releases/latest"
+            data-ar
+            >تحميل لـ Windows</a
+          >
+          <a
+            class="btn primary"
+            href="https://github.com/l7v0l/drift-browser/releases/latest"
+            data-en
+            >Download for Windows</a
+          >
+          <a class="btn ghost" href="https://github.com/l7v0l/drift-browser">GitHub</a>
+        </div>
+        <p class="note" data-ar>مجاني ومفتوح المصدر (MIT). النسخة غير موقّعة بعد، فقد يظهر تحذير SmartScreen.</p>
+        <p class="note" data-en>Free and open source (MIT). Builds are not signed yet, so SmartScreen may warn.</p>
+      </section>
+
+      <section class="shots">
+        <img src="/img/newtab-ar.png" alt="Drift new tab page, Arabic" />
+        <img src="/img/newtab-en-dark.png" alt="Drift new tab page, dark theme" />
+      </section>
+
+      <section class="grid">
+        <div class="card">
+          <h3 data-ar>تبويبات ذكية</h3>
+          <h3 data-en>Smart tabs</h3>
+          <p data-ar>سحب وتثبيت وإعادة فتح المغلق، وتعليق الخامل تلقائياً لتوفير الذاكرة.</p>
+          <p data-en>Drag, pin, reopen closed tabs, and idle tabs are discarded to save memory.</p>
+        </div>
+        <div class="card">
+          <h3 data-ar>عربي أولاً</h3>
+          <h3 data-en>Arabic first</h3>
+          <p data-ar>واجهة RTL كاملة، والتاريخ الهجري والميلادي في صفحة البداية.</p>
+          <p data-en>Full RTL interface, with Hijri and Gregorian dates on the new tab page.</p>
+        </div>
+        <div class="card">
+          <h3 data-ar>خصوصية</h3>
+          <h3 data-en>Private</h3>
+          <p data-ar>نوافذ خاصة لا تحفظ شيئاً، وصفحات داخلية معزولة بعزل صارم للعمليات.</p>
+          <p data-en>Private windows save nothing; internal pages run behind a strict, typed IPC bridge.</p>
+        </div>
+        <div class="card">
+          <h3 data-ar>خفيف</h3>
+          <h3 data-en>Light</h3>
+          <p data-ar>تحميل كسول وبدء سريع، وصفحة تعرض استهلاك الذاكرة لكل تبويب.</p>
+          <p data-en>Lazy loading, quick startup, and a page showing memory use per tab.</p>
+        </div>
+      </section>
+
+      <footer>
+        <span>© 2026 l7v0l · MIT</span>
+        <span>
+          <a href="https://github.com/l7v0l/drift-browser/blob/main/README.md">README</a> ·
+          <a href="https://github.com/l7v0l/drift-browser/blob/main/ROADMAP.md">Roadmap</a> ·
+          <a href="https://github.com/l7v0l/drift-browser/issues">Issues</a>
+        </span>
+      </footer>
+    </div>
+
+    <script>
+      var btn = document.getElementById('lang')
+      function setLang(lang) {
+        document.documentElement.lang = lang
+        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr'
+        btn.textContent = lang === 'ar' ? 'English' : 'العربية'
+        try {
+          localStorage.setItem('lang', lang)
+        } catch (e) {
+          /* storage unavailable */
+        }
+      }
+      var saved = null
+      try {
+        saved = localStorage.getItem('lang')
+      } catch (e) {
+        /* storage unavailable */
+      }
+      if (saved === 'en') setLang('en')
+      btn.addEventListener('click', function () {
+        setLang(document.documentElement.lang === 'ar' ? 'en' : 'ar')
+      })
+    </script>
+  </body>
+</html>
