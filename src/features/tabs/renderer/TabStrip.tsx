@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Icon } from '@renderer/components/Icon'
 import { useOverlay } from '@renderer/hooks/useOverlay'
-import { NEW_TAB_URL } from '@shared/constants'
+import { isNewTabUrl } from '@shared/url'
 import type { TabInfo } from '@shared/types'
 import { useTabs } from './store'
 
@@ -23,7 +23,7 @@ function Favicon({ tab }: { tab: TabInfo }) {
   return <Icon name="globe" size={16} className="shrink-0 text-muted" />
 }
 
-export function TabStrip() {
+export function TabStrip({ leading }: { leading?: ReactNode }) {
   const { t } = useTranslation()
   const tabs = useTabs((s) => s.tabs)
   const activeId = useTabs((s) => s.activeId)
@@ -40,10 +40,11 @@ export function TabStrip() {
 
   return (
     <div className="flex h-10 items-center gap-1 bg-surface-2 px-2">
+      {leading}
       <div className="flex min-w-0 flex-1 items-center gap-1">
         {tabs.map((tab, index) => {
           const active = tab.id === activeId
-          const title = tab.title || (tab.url === NEW_TAB_URL ? t('tab.newTitle') : tab.url)
+          const title = tab.title || (isNewTabUrl(tab.url) ? t('tab.newTitle') : tab.url)
           return (
             <div
               key={tab.id}

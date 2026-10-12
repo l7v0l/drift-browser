@@ -16,6 +16,15 @@ export default defineConfig({
   },
   renderer: {
     plugins: [react()],
-    resolve: { alias: { ...shared, '@renderer': resolve('src/renderer') } }
+    resolve: { alias: { ...shared, '@renderer': resolve('src/renderer') } },
+    build: {
+      rollupOptions: {
+        // index.html = browser chrome, pages.html = drift:// internal pages (lazy per page)
+        input: {
+          index: resolve('src/renderer/index.html'),
+          pages: resolve('src/renderer/pages.html')
+        }
+      }
+    }
   }
 })

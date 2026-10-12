@@ -9,6 +9,8 @@ export type ShortcutId =
   | 'prev-tab'
   | 'reload'
   | 'fullscreen'
+  | 'new-window'
+  | 'private-window'
 
 export interface KeyInput {
   key: string
@@ -27,6 +29,7 @@ export function matchShortcut(input: KeyInput): ShortcutId | null {
   if (!mod || input.alt) return null
   if (key === 'tab') return input.shift ? 'prev-tab' : 'next-tab'
   if (key === 't') return input.shift ? 'reopen-tab' : 'new-tab'
+  if (key === 'n') return input.shift ? 'private-window' : 'new-window'
   if (input.shift) return null
   if (key === 'w') return 'close-tab'
   if (key === 'l') return 'focus-address'

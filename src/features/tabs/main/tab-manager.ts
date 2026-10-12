@@ -1,6 +1,7 @@
 import { WebContentsView, type BrowserWindow, type Rectangle, type WebContents } from 'electron'
 import { resolveInput } from '@shared/url'
-import { NEW_TAB_URL } from '@shared/constants'
+import { DRIFT_SCHEME, NEW_TAB_URL } from '@shared/constants'
+import { isNewTabUrl } from '@shared/url'
 import type { SavedTab, SessionData, Settings, TabInfo, TabsState } from '@shared/types'
 
 interface Tab extends SavedTab {
@@ -15,6 +16,8 @@ export interface TabManagerOptions {
   /** Chrome UI view; kept above page views at all times. */
   ui: WebContentsView
   partition: string
+  /** Preload that exposes the bridge only to drift:// pages. */
+  preload: string
   getBounds: () => Rectangle
   getSettings: () => Settings
   onChange: (state: TabsState) => void
@@ -59,7 +62,7 @@ export class TabManager {
     const index = this.tabs.findIndex((t) => t.id === id)
     if (index < 0) return
     const [tab] = this.tabs.splice(index, 1)
-    if (tab.url !== NEW_TAB_URL) {
+    if (!isNewTabUrl(tab.url)) {
       this.closed.push({ url: tab.url, title: tab.title, favicon: tab.favicon, pinned: tab.pinned })
       if (this.closed.length > MAX_CLOSED) this.closed.shift()
     }
@@ -158,6 +161,17 @@ export class TabManager {
     this.active()?.view?.setBounds(this.opts.getBounds())
   }
 
+  owns(wc: WebContents): boolean {
+    return this.tabs.some((t) => t.view?.webContents === wc)
+  }
+
+  /** Live drift:// internal pages, used to push data events to them. */
+  pageContents(): WebContents[] {
+    return this.tabs
+      .filter((t) => t.view && t.url.startsWith(DRIFT_SCHEME + '//'))
+      .map((t) => t.view!.webContents)
+  }
+
   snapshot(): TabsState {
     return { tabs: this.tabs.map((t) => this.info(t)), activeId: this.activeId }
   }
@@ -217,6 +231,7 @@ export class TabManager {
     const view = new WebContentsView({
       webPreferences: {
         partition: this.opts.partition,
+        preload: this.opts.preload,
         contextIsolation: true,
         sandbox: true,
         nodeIntegration: false

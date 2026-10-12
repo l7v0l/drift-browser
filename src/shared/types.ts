@@ -59,3 +59,36 @@ export interface Suggestion {
   title: string
   source: 'history' | 'bookmark'
 }
+
+export interface Bookmark {
+  id: string
+  title: string
+  url: string
+  createdAt: number
+}
+
+export interface ShortcutItem {
+  id: string
+  title: string
+  url: string
+}
+
+export type ClearRange = 'hour' | 'day' | 'week' | 'all'
+
+export type DownloadState = 'progressing' | 'completed' | 'cancelled' | 'interrupted'
+
+export interface DownloadInfo {
+  id: number
+  filename: string
+  url: string
+  savePath: string
+  received: number
+  total: number
+  state: DownloadState
+  paused: boolean
+  startedAt: number
+}
+
+export interface WindowInfo {
+  private: boolean
+}

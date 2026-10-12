@@ -1,5 +1,12 @@
 {
   "app": { "tagline": "تصفّح بخفة" },
+  "common": {
+    "open": "فتح",
+    "delete": "حذف",
+    "cancel": "إلغاء",
+    "add": "إضافة",
+    "done": "تم"
+  },
   "tab": {
     "new": "تبويب جديد",
     "newTitle": "تبويب جديد",
@@ -15,5 +22,55 @@
     "stop": "إيقاف",
     "home": "الصفحة الرئيسية"
   },
-  "address": { "placeholder": "ابحث أو اكتب عنواناً" }
+  "address": { "placeholder": "ابحث أو اكتب عنواناً" },
+  "menu": {
+    "title": "القائمة",
+    "newWindow": "نافذة جديدة",
+    "privateWindow": "نافذة خاصة",
+    "private": "تصفح خاص"
+  },
+  "bookmarks": {
+    "title": "المفضلة",
+    "toggle": "إضافة إلى المفضلة أو إزالتها",
+    "empty": "لا توجد مفضلة بعد. اضغط النجمة في شريط العنوان لحفظ صفحة.",
+    "barEmpty": "المفضلة تظهر هنا"
+  },
+  "history": {
+    "title": "السجل",
+    "search": "ابحث في السجل",
+    "empty": "لا يوجد سجل.",
+    "clear": "مسح",
+    "range": "نطاق المسح",
+    "range_hour": "آخر ساعة",
+    "range_day": "آخر 24 ساعة",
+    "range_week": "آخر 7 أيام",
+    "range_all": "الكل"
+  },
+  "downloads": {
+    "title": "التنزيلات",
+    "empty": "لا توجد تنزيلات.",
+    "clear": "مسح القائمة",
+    "showAll": "عرض كل التنزيلات",
+    "openFile": "فتح الملف",
+    "showFolder": "إظهار في المجلد",
+    "state_completed": "اكتمل",
+    "state_cancelled": "أُلغي",
+    "state_interrupted": "فشل",
+    "state_progressing": "جارٍ التنزيل"
+  },
+  "newtab": {
+    "shortcutName": "الاسم",
+    "editShortcuts": "تعديل الاختصارات"
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "language": "اللغة",
+    "theme": "المظهر",
+    "themeSystem": "تلقائي",
+    "themeLight": "فاتح",
+    "themeDark": "داكن",
+    "searchEngine": "محرك البحث",
+    "homepage": "الصفحة الرئيسية",
+    "bookmarksBar": "إظهار شريط المفضلة"
+  }
 }

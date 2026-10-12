@@ -15,4 +15,8 @@ const api: DriftApi = {
   }
 }
 
-contextBridge.exposeInMainWorld('drift', api)
+// Every tab view loads this preload, but the bridge exists only in the chrome UI (flagged by
+// main) and on drift:// pages. Ordinary websites never see it; main re-checks the sender anyway.
+if (process.argv.includes('--drift-ui') || location.protocol === 'drift:') {
+  contextBridge.exposeInMainWorld('drift', api)
+}

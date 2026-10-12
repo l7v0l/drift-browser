@@ -1,5 +1,12 @@
 {
   "app": { "tagline": "Browse light." },
+  "common": {
+    "open": "Open",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "add": "Add",
+    "done": "Done"
+  },
   "tab": {
     "new": "New tab",
     "newTitle": "New tab",
@@ -15,5 +22,55 @@
     "stop": "Stop",
     "home": "Home"
   },
-  "address": { "placeholder": "Search or enter address" }
+  "address": { "placeholder": "Search or enter address" },
+  "menu": {
+    "title": "Menu",
+    "newWindow": "New window",
+    "privateWindow": "Private window",
+    "private": "Private"
+  },
+  "bookmarks": {
+    "title": "Bookmarks",
+    "toggle": "Add or remove bookmark",
+    "empty": "No bookmarks yet. Click the star in the address bar to save a page.",
+    "barEmpty": "Bookmarks appear here"
+  },
+  "history": {
+    "title": "History",
+    "search": "Search history",
+    "empty": "No history.",
+    "clear": "Clear",
+    "range": "Clear range",
+    "range_hour": "Last hour",
+    "range_day": "Last 24 hours",
+    "range_week": "Last 7 days",
+    "range_all": "Everything"
+  },
+  "downloads": {
+    "title": "Downloads",
+    "empty": "No downloads.",
+    "clear": "Clear list",
+    "showAll": "Show all downloads",
+    "openFile": "Open file",
+    "showFolder": "Show in folder",
+    "state_completed": "Completed",
+    "state_cancelled": "Cancelled",
+    "state_interrupted": "Failed",
+    "state_progressing": "Downloading"
+  },
+  "newtab": {
+    "shortcutName": "Name",
+    "editShortcuts": "Edit shortcuts"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "theme": "Theme",
+    "themeSystem": "System",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "searchEngine": "Search engine",
+    "homepage": "Homepage",
+    "bookmarksBar": "Show bookmarks bar"
+  }
 }

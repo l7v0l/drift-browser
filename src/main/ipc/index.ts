@@ -1,51 +1,93 @@
-import { app, ipcMain } from 'electron'
-import type { IpcInvokeMap, InvokeChannel } from '@shared/ipc-types'
+import { app, ipcMain, type IpcMainInvokeEvent } from 'electron'
+import { DRIFT_SCHEME } from '@shared/constants'
+import { PAGE_INVOKE_CHANNELS, type InvokeChannel, type IpcInvokeMap } from '@shared/ipc-types'
 import { suggest } from '@features/addressbar/main/suggest'
-import type { AppWindow } from '../window'
+import {
+  listBookmarks,
+  removeBookmark,
+  toggle as toggleBookmark,
+  updateBookmark
+} from '@features/bookmarks/main/bookmarks'
+import { clearHistory, listHistory, removeEntry } from '@features/history/main/history'
+import { listShortcuts, setShortcuts } from '@features/newtab/main/shortcuts'
+import { AppWindow } from '../window'
 import { getSettings, patchSettings } from '../store'
-import { send } from './send'
 
 type Handlers = {
-  [C in InvokeChannel]: (...args: IpcInvokeMap[C]['args']) => IpcInvokeMap[C]['result']
+  [C in InvokeChannel]: (
+    win: AppWindow,
+    ...args: IpcInvokeMap[C]['args']
+  ) => IpcInvokeMap[C]['result']
 }
 
-export function registerIpc(getWindow: () => AppWindow | null): void {
-  const w = (): AppWindow => {
-    const win = getWindow()
-    if (!win) throw new Error('No window')
-    return win
-  }
+/**
+ * Chrome UI may call everything. A drift:// page may call only PAGE_INVOKE_CHANNELS.
+ * Web pages never reach here: their preload does not expose the bridge.
+ */
+function authorize(e: IpcMainInvokeEvent, channel: InvokeChannel): AppWindow {
+  const win = AppWindow.fromSender(e.sender)
+  if (!win) throw new Error('Unknown sender')
+  if (e.sender === win.ui.webContents) return win
+  const url = e.senderFrame?.url ?? ''
+  if (url.startsWith(DRIFT_SCHEME + '//') && PAGE_INVOKE_CHANNELS.has(channel)) return win
+  throw new Error(`Unauthorized: ${channel}`)
+}
 
+export function registerIpc(): void {
   const handlers: Handlers = {
     'settings:get': () => getSettings(),
-    'settings:set': (patch) => {
+    'settings:set': (_w, patch) => {
       const next = patchSettings(patch)
-      send(w().ui.webContents, 'settings:changed', next)
+      AppWindow.broadcast('settings:changed', next)
       return next
     },
     'app:info': () => ({ name: app.getName(), version: app.getVersion() }),
-    'tabs:state': () => w().tabs.snapshot(),
-    'tabs:create': (url) => {
-      w().tabs.create(url)
+    'window:info': (w) => ({ private: w.isPrivate }),
+    'window:new': (_w, isPrivate) => {
+      AppWindow.open(Boolean(isPrivate))
     },
-    'tabs:close': (id) => w().tabs.close(id),
-    'tabs:activate': (id) => w().tabs.activate(id),
-    'tabs:move': (id, index) => w().tabs.move(id, index),
-    'tabs:pin': (id, pinned) => w().tabs.pin(id, pinned),
-    'tabs:navigate': (input) => w().tabs.navigate(String(input)),
-    'tabs:back': () => w().tabs.back(),
-    'tabs:forward': () => w().tabs.forward(),
-    'tabs:reload': () => w().tabs.reload(),
-    'tabs:stop': () => w().tabs.stop(),
-    'tabs:home': () => w().tabs.home(),
-    'tabs:reopen-closed': () => w().tabs.reopenClosed(),
-    'suggest:query': (text) => suggest(String(text)),
-    'ui:set-overlay': (open) => w().setOverlay(Boolean(open)),
-    'ui:set-chrome-height': (height) => w().setChromeHeight(Number(height))
+    'tabs:state': (w) => w.tabs.snapshot(),
+    'tabs:create': (w, url) => {
+      w.tabs.create(url)
+    },
+    'tabs:close': (w, id) => w.tabs.close(id),
+    'tabs:activate': (w, id) => w.tabs.activate(id),
+    'tabs:move': (w, id, index) => w.tabs.move(id, index),
+    'tabs:pin': (w, id, pinned) => w.tabs.pin(id, pinned),
+    'tabs:navigate': (w, input) => w.tabs.navigate(String(input)),
+    'tabs:back': (w) => w.tabs.back(),
+    'tabs:forward': (w) => w.tabs.forward(),
+    'tabs:reload': (w) => w.tabs.reload(),
+    'tabs:stop': (w) => w.tabs.stop(),
+    'tabs:home': (w) => w.tabs.home(),
+    'tabs:reopen-closed': (w) => w.tabs.reopenClosed(),
+    'suggest:query': (_w, text) => suggest(String(text)),
+    'ui:set-overlay': (w, open) => w.setOverlay(Boolean(open)),
+    'ui:set-chrome-height': (w, height) => w.setChromeHeight(Number(height)),
+    'bookmarks:list': () => listBookmarks(),
+    'bookmarks:toggle': (_w, url, title) =>
+      bookmarksChanged(toggleBookmark(String(url), String(title))),
+    'bookmarks:remove': (_w, id) => bookmarksChanged(removeBookmark(String(id))),
+    'bookmarks:update': (_w, id, patch) => bookmarksChanged(updateBookmark(String(id), patch)),
+    'history:list': (_w, query) => listHistory(query === undefined ? undefined : String(query)),
+    'history:remove': (_w, visitedAt) => removeEntry(Number(visitedAt)),
+    'history:clear': (_w, range) => clearHistory(range),
+    'downloads:list': (w) => w.downloads.list(),
+    'downloads:open': (w, id) => w.downloads.open(Number(id)),
+    'downloads:show': (w, id) => w.downloads.show(Number(id)),
+    'downloads:cancel': (w, id) => w.downloads.cancel(Number(id)),
+    'downloads:clear': (w) => w.downloads.clear(),
+    'shortcuts:list': () => listShortcuts(),
+    'shortcuts:set': (_w, items) => setShortcuts(Array.isArray(items) ? items : [])
   }
 
   for (const channel of Object.keys(handlers) as InvokeChannel[]) {
-    const handler = handlers[channel] as (...a: unknown[]) => unknown
-    ipcMain.handle(channel, (_e, ...args) => handler(...args))
+    const handler = handlers[channel] as (win: AppWindow, ...a: unknown[]) => unknown
+    ipcMain.handle(channel, (e, ...args) => handler(authorize(e, channel), ...args))
   }
+}
+
+function bookmarksChanged<T extends ReturnType<typeof listBookmarks>>(items: T): T {
+  AppWindow.broadcast('bookmarks:changed', items)
+  return items
 }

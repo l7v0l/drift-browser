@@ -1,0 +1,12 @@
+/* Internal pages are opaque documents, unlike the transparent chrome view. */
+html,
+body {
+  background: var(--surface-2);
+  user-select: auto;
+  overflow-y: auto;
+}
+
+#root {
+  height: auto;
+  min-height: 100%;
+}

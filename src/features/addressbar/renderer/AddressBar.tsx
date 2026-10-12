@@ -1,15 +1,16 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Icon } from '@renderer/components/Icon'
 import { useOverlay } from '@renderer/hooks/useOverlay'
 import { useActiveTab } from '@features/tabs/renderer/store'
-import { NEW_TAB_URL } from '@shared/constants'
+import { isNewTabUrl } from '@shared/url'
+import { useBookmarks } from '@features/bookmarks/renderer/store'
 import type { Suggestion } from '@shared/types'
 
 const call = window.drift.invoke
 const SUGGEST_DELAY_MS = 60
 
-const displayUrl = (url: string): string => (url === NEW_TAB_URL ? '' : url)
+const displayUrl = (url: string): string => (isNewTabUrl(url) ? '' : url)
 
 function NavButton(props: {
   icon: Parameters<typeof Icon>[0]['name']
@@ -31,7 +32,7 @@ function NavButton(props: {
   )
 }
 
-export function AddressBar() {
+export function AddressBar({ trailing }: { trailing?: ReactNode }) {
   const { t } = useTranslation()
   const tab = useActiveTab()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -42,6 +43,8 @@ export function AddressBar() {
   const [selected, setSelected] = useState(-1)
 
   const url = tab?.url ?? ''
+  const bookmarked = useBookmarks((s) => s.items.some((b) => b.url === url))
+  const canBookmark = url.startsWith('http://') || url.startsWith('https://')
   const open = focused && items.length > 0
   useOverlay(open)
 
@@ -148,6 +151,18 @@ export function AddressBar() {
             className="min-w-0 flex-1 bg-transparent outline-none"
             style={{ userSelect: 'text' }}
           />
+          {canBookmark && (
+            <button
+              aria-label={t('bookmarks.toggle')}
+              title={t('bookmarks.toggle')}
+              onClick={() => void call('bookmarks:toggle', url, tab?.title ?? '')}
+              className={`shrink-0 transition-colors duration-150 ${
+                bookmarked ? 'text-accent' : 'text-muted hover:text-ink'
+              }`}
+            >
+              <Icon name="star" size={16} filled={bookmarked} />
+            </button>
+          )}
         </div>
 
         {open && (
@@ -175,6 +190,7 @@ export function AddressBar() {
           </>
         )}
       </div>
+      {trailing}
     </div>
   )
 }

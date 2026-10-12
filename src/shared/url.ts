@@ -20,3 +20,6 @@ export function resolveInput(input: string, engine: SearchEngine): string {
   }
   return SEARCH_URLS[engine] + encodeURIComponent(text)
 }
+
+/** drift://newtab and its normalized form drift://newtab/ */
+export const isNewTabUrl = (url: string): boolean => url.replace(/\/$/, '') === 'drift://newtab'
