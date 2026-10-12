@@ -26,7 +26,13 @@ jobs:
           MAIN_VITE_GOOGLE_CLIENT_ID: ${{ secrets.MAIN_VITE_GOOGLE_CLIENT_ID }}
           MAIN_VITE_GOOGLE_CLIENT_SECRET: ${{ secrets.MAIN_VITE_GOOGLE_CLIENT_SECRET }}
           MAIN_VITE_MICROSOFT_CLIENT_ID: ${{ secrets.MAIN_VITE_MICROSOFT_CLIENT_ID }}
-      # Uploads the installer, portable exe, blockmap and latest.yml (used by auto-update).
-      - run: npx electron-builder --win --publish always
+      - run: npx electron-builder --win --publish never
+      # electron-builder's own uploader let the job finish before the large files were sent,
+      # so publish with gh instead (installer, portable exe, blockmap and latest.yml for auto-update).
+      - name: Publish release
+        shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 || gh release create "$GITHUB_REF_NAME" --title "Drift ${GITHUB_REF_NAME#v}" --generate-notes
+          gh release upload "$GITHUB_REF_NAME" release/*.exe release/*.blockmap release/latest.yml --clobber
