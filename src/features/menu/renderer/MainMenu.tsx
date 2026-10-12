@@ -22,7 +22,8 @@ export function MainMenu() {
     [t('bookmarks.title'), page('bookmarks')],
     [t('history.title'), page('history')],
     [t('downloads.title'), page('downloads')],
-    [t('settings.title'), page('settings')]
+    [t('settings.title'), page('settings')],
+    [t('about.title'), page('about')]
   ]
 
   return (

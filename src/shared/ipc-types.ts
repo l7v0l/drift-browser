@@ -1,8 +1,11 @@
 import type {
   Bookmark,
+  AppInfo,
   ClearRange,
   DownloadInfo,
+  FindResult,
   HistoryEntry,
+  MemoryInfo,
   Settings,
   ShortcutItem,
   Suggestion,
@@ -21,7 +24,8 @@ type Req<A extends unknown[] = [], R = void> = { args: A; result: R }
 export interface IpcInvokeMap {
   'settings:get': Req<[], Settings>
   'settings:set': Req<[patch: Partial<Settings>], Settings>
-  'app:info': Req<[], { name: string; version: string }>
+  'app:info': Req<[], AppInfo>
+  'app:memory': Req<[], MemoryInfo>
   'window:info': Req<[], WindowInfo>
   'window:new': Req<[isPrivate: boolean]>
   'tabs:state': Req<[], TabsState>
@@ -37,6 +41,10 @@ export interface IpcInvokeMap {
   'tabs:stop': Req
   'tabs:home': Req
   'tabs:reopen-closed': Req
+  'tabs:discard': Req<[id: number]>
+  'tabs:zoom': Req<[action: 'in' | 'out' | 'reset']>
+  'find:start': Req<[text: string, forward: boolean, next: boolean]>
+  'find:stop': Req
   'suggest:query': Req<[text: string], Suggestion[]>
   'ui:set-overlay': Req<[open: boolean]>
   'ui:set-chrome-height': Req<[height: number]>
@@ -60,6 +68,8 @@ export interface IpcEventMap {
   'settings:changed': Settings
   'tabs:changed': TabsState
   'ui:focus-address': null
+  'ui:open-find': null
+  'find:result': FindResult
   'bookmarks:changed': Bookmark[]
   'downloads:changed': DownloadInfo[]
 }
@@ -80,6 +90,7 @@ const invokeAllow: Record<InvokeChannel, true> = {
   'settings:get': true,
   'settings:set': true,
   'app:info': true,
+  'app:memory': true,
   'window:info': true,
   'window:new': true,
   'tabs:state': true,
@@ -95,6 +106,10 @@ const invokeAllow: Record<InvokeChannel, true> = {
   'tabs:stop': true,
   'tabs:home': true,
   'tabs:reopen-closed': true,
+  'tabs:discard': true,
+  'tabs:zoom': true,
+  'find:start': true,
+  'find:stop': true,
   'suggest:query': true,
   'ui:set-overlay': true,
   'ui:set-chrome-height': true,
@@ -117,6 +132,8 @@ const eventAllow: Record<EventChannel, true> = {
   'settings:changed': true,
   'tabs:changed': true,
   'ui:focus-address': true,
+  'ui:open-find': true,
+  'find:result': true,
   'bookmarks:changed': true,
   'downloads:changed': true
 }
@@ -129,6 +146,8 @@ export const PAGE_INVOKE_CHANNELS: ReadonlySet<InvokeChannel> = new Set<InvokeCh
   'settings:get',
   'settings:set',
   'app:info',
+  'app:memory',
+  'tabs:discard',
   'window:info',
   'tabs:navigate',
   'tabs:create',

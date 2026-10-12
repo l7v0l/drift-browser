@@ -1,6 +1,7 @@
 import { app, ipcMain, type IpcMainInvokeEvent } from 'electron'
 import { DRIFT_SCHEME } from '@shared/constants'
 import { PAGE_INVOKE_CHANNELS, type InvokeChannel, type IpcInvokeMap } from '@shared/ipc-types'
+import { buildMemoryInfo } from '@features/about/main/memory'
 import { suggest } from '@features/addressbar/main/suggest'
 import {
   listBookmarks,
@@ -41,7 +42,18 @@ export function registerIpc(): void {
       AppWindow.broadcast('settings:changed', next)
       return next
     },
-    'app:info': () => ({ name: app.getName(), version: app.getVersion() }),
+    'app:info': () => ({
+      name: app.getName(),
+      version: app.getVersion(),
+      electron: process.versions.electron,
+      chrome: process.versions.chrome,
+      node: process.versions.node
+    }),
+    'app:memory': (w) =>
+      buildMemoryInfo(
+        app.getAppMetrics().map((m) => ({ pid: m.pid, workingSetKB: m.memory.workingSetSize })),
+        w.tabs.processIds()
+      ),
     'window:info': (w) => ({ private: w.isPrivate }),
     'window:new': (_w, isPrivate) => {
       AppWindow.open(Boolean(isPrivate))
@@ -61,6 +73,11 @@ export function registerIpc(): void {
     'tabs:stop': (w) => w.tabs.stop(),
     'tabs:home': (w) => w.tabs.home(),
     'tabs:reopen-closed': (w) => w.tabs.reopenClosed(),
+    'tabs:discard': (w, id) => w.tabs.discard(Number(id)),
+    'tabs:zoom': (w, action) => w.tabs.zoom(action),
+    'find:start': (w, text, forward, next) =>
+      w.tabs.find(String(text), Boolean(forward), Boolean(next)),
+    'find:stop': (w) => w.tabs.stopFind(),
     'suggest:query': (_w, text) => suggest(String(text)),
     'ui:set-overlay': (w, open) => w.setOverlay(Boolean(open)),
     'ui:set-chrome-height': (w, height) => w.setChromeHeight(Number(height)),

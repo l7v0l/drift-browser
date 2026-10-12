@@ -8,6 +8,8 @@ export interface Settings {
   searchEngine: SearchEngine
   homepage: string
   showBookmarksBar: boolean
+  /** Unload background tabs idle this long to free memory. 0 disables discarding. */
+  discardAfterMinutes: number
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -15,7 +17,8 @@ export const DEFAULT_SETTINGS: Settings = {
   theme: 'system',
   searchEngine: 'google',
   homepage: 'drift://newtab',
-  showBookmarksBar: true
+  showBookmarksBar: true,
+  discardAfterMinutes: 30
 }
 
 export interface TabInfo {
@@ -27,6 +30,8 @@ export interface TabInfo {
   canGoBack: boolean
   canGoForward: boolean
   pinned: boolean
+  /** Page zoom factor, 1 = 100%. */
+  zoom: number
   /** True when the tab has no live page (restored or unloaded) and loads on activation. */
   discarded: boolean
 }
@@ -91,4 +96,32 @@ export interface DownloadInfo {
 
 export interface WindowInfo {
   private: boolean
+}
+
+export interface FindResult {
+  active: number
+  total: number
+}
+
+export interface AppInfo {
+  name: string
+  version: string
+  electron: string
+  chrome: string
+  node: string
+}
+
+export interface TabMemory {
+  id: number
+  title: string
+  url: string
+  /** null while the tab is discarded (no live page). */
+  memoryMB: number | null
+  discarded: boolean
+}
+
+export interface MemoryInfo {
+  /** Whole app: browser, GPU, utility and every renderer process. */
+  totalMB: number
+  tabs: TabMemory[]
 }

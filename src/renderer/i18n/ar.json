@@ -1,5 +1,7 @@
 {
-  "app": { "tagline": "تصفّح بخفة" },
+  "app": {
+    "tagline": "تصفّح بخفة"
+  },
   "common": {
     "open": "فتح",
     "delete": "حذف",
@@ -22,7 +24,9 @@
     "stop": "إيقاف",
     "home": "الصفحة الرئيسية"
   },
-  "address": { "placeholder": "ابحث أو اكتب عنواناً" },
+  "address": {
+    "placeholder": "ابحث أو اكتب عنواناً"
+  },
   "menu": {
     "title": "القائمة",
     "newWindow": "نافذة جديدة",
@@ -71,6 +75,25 @@
     "themeDark": "داكن",
     "searchEngine": "محرك البحث",
     "homepage": "الصفحة الرئيسية",
-    "bookmarksBar": "إظهار شريط المفضلة"
+    "bookmarksBar": "إظهار شريط المفضلة",
+    "discard": "تعليق التبويبات الخاملة",
+    "discardOff": "متوقف",
+    "discardMinutes": "بعد {{count}} دقيقة"
+  },
+  "find": {
+    "placeholder": "ابحث في الصفحة",
+    "prev": "السابق",
+    "next": "التالي",
+    "close": "إغلاق البحث"
+  },
+  "zoom": {
+    "reset": "إعادة التكبير إلى 100%"
+  },
+  "about": {
+    "title": "حول Drift",
+    "memory": "استهلاك الذاكرة",
+    "tabsSummary": "{{loaded}} تبويب نشط، {{discarded}} معلّق",
+    "discarded": "معلّق",
+    "discard": "تعليق"
   }
 }

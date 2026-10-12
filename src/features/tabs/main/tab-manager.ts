@@ -2,13 +2,16 @@ import { WebContentsView, type BrowserWindow, type Rectangle, type WebContents }
 import { resolveInput } from '@shared/url'
 import { DRIFT_SCHEME, NEW_TAB_URL } from '@shared/constants'
 import { isNewTabUrl } from '@shared/url'
-import type { SavedTab, SessionData, Settings, TabInfo, TabsState } from '@shared/types'
+import type { FindResult, SavedTab, SessionData, Settings, TabInfo, TabsState } from '@shared/types'
+import { pickIdleTabs } from './discard'
+import { nextZoom } from './zoom'
 
 interface Tab extends SavedTab {
   id: number
   loading: boolean
   view: WebContentsView | null
   lastRecordedUrl: string
+  lastActive: number
 }
 
 export interface TabManagerOptions {
@@ -24,12 +27,14 @@ export interface TabManagerOptions {
   /** Hook for per-page webContents setup (shortcuts). */
   bindInput: (wc: WebContents) => void
   onVisit?: (url: string, title: string) => void
+  onFind: (result: FindResult) => void
   loadSession: () => SessionData
   saveSession: (session: SessionData) => void
 }
 
 const MAX_CLOSED = 25
 const SAVE_DELAY_MS = 500
+const IDLE_CHECK_MS = 60_000
 
 export class TabManager {
   private tabs: Tab[] = []
@@ -39,7 +44,19 @@ export class TabManager {
   private emitQueued = false
   private saveTimer: NodeJS.Timeout | null = null
 
-  constructor(private readonly opts: TabManagerOptions) {}
+  private idleTimer: NodeJS.Timeout
+  /** Newest find request; results of older (superseded) requests are dropped. */
+  private findRequest = 0
+
+  constructor(private readonly opts: TabManagerOptions) {
+    this.idleTimer = setInterval(() => this.discardIdle(), IDLE_CHECK_MS)
+    this.idleTimer.unref()
+  }
+
+  dispose(): void {
+    clearInterval(this.idleTimer)
+    if (this.saveTimer) clearTimeout(this.saveTimer)
+  }
 
   restore(): void {
     const session = this.opts.loadSession()
@@ -78,11 +95,19 @@ export class TabManager {
   }
 
   activate(id: number): void {
-    const tab = this.find(id)
+    const tab = this.byId(id)
     if (!tab) return
+    if (this.activeId !== id) this.stopFind()
     this.ensureView(tab)
-    for (const other of this.tabs) other.view?.setVisible(other.id === id)
+    // Inactive views are detached rather than hidden: Chromium's find-in-page returns no results
+    // for a page that went hidden -> visible, but works after a detach/attach.
+    for (const other of this.tabs) {
+      if (other.id !== id && other.view) this.opts.win.contentView.removeChildView(other.view)
+    }
+    this.opts.win.contentView.addChildView(tab.view!)
+    this.opts.win.contentView.addChildView(this.opts.ui)
     this.activeId = id
+    tab.lastActive = Date.now()
     this.layout()
     this.emit()
   }
@@ -156,6 +181,62 @@ export class TabManager {
     this.active()?.view?.webContents.stop()
   }
 
+  /** Unload one background tab; it reloads from its URL when activated again. */
+  discard(id: number): void {
+    const tab = this.byId(id)
+    if (!tab?.view || id === this.activeId) return
+    const url = tab.view.webContents.getURL()
+    if (url) tab.url = url
+    tab.loading = false
+    this.destroyView(tab)
+    this.emit()
+  }
+
+  /** Discard tabs idle past the user's threshold (skips active, loading and audible tabs). */
+  discardIdle(): void {
+    const minutes = this.opts.getSettings().discardAfterMinutes
+    if (minutes <= 0) return
+    const candidates = this.tabs.map((t) => ({
+      id: t.id,
+      lastActive: t.lastActive,
+      loaded: t.view !== null,
+      busy: t.loading || (t.view?.webContents.isCurrentlyAudible() ?? false)
+    }))
+    for (const id of pickIdleTabs(candidates, this.activeId, Date.now(), minutes * 60_000)) {
+      this.discard(id)
+    }
+  }
+
+  zoom(action: 'in' | 'out' | 'reset'): void {
+    const wc = this.active()?.view?.webContents
+    if (!wc) return
+    wc.setZoomFactor(nextZoom(wc.getZoomFactor(), action))
+    this.emit()
+  }
+
+  find(text: string, forward: boolean, next: boolean): void {
+    const wc = this.active()?.view?.webContents
+    if (!wc) return
+    if (!text) return this.stopFind()
+    // Electron only reports results when findNext is absent (an explicit false yields no events).
+    this.findRequest = wc.findInPage(text, next ? { forward, findNext: true } : { forward })
+  }
+
+  stopFind(): void {
+    const wc = this.active()?.view?.webContents
+    if (wc && !wc.isDestroyed()) wc.stopFindInPage('clearSelection')
+  }
+
+  /** Per-tab process ids for the memory report; null when the tab has no live page. */
+  processIds(): { id: number; title: string; url: string; pid: number | null }[] {
+    return this.tabs.map((t) => ({
+      id: t.id,
+      title: t.title,
+      url: t.url,
+      pid: t.view ? t.view.webContents.getOSProcessId() : null
+    }))
+  }
+
   /** Resize the visible page view to the area below the chrome UI. */
   layout(): void {
     this.active()?.view?.setBounds(this.opts.getBounds())
@@ -190,7 +271,14 @@ export class TabManager {
   }
 
   private add(saved: SavedTab): Tab {
-    const tab: Tab = { ...saved, id: ++this.seq, loading: false, view: null, lastRecordedUrl: '' }
+    const tab: Tab = {
+      ...saved,
+      id: ++this.seq,
+      loading: false,
+      view: null,
+      lastRecordedUrl: '',
+      lastActive: Date.now()
+    }
     // Pinned tabs live in the leading group; everything else appends.
     const at = saved.pinned ? this.tabs.filter((t) => t.pinned).length : this.tabs.length
     this.tabs.splice(at, 0, tab)
@@ -198,12 +286,12 @@ export class TabManager {
     return tab
   }
 
-  private find(id: number): Tab | undefined {
+  private byId(id: number): Tab | undefined {
     return this.tabs.find((t) => t.id === id)
   }
 
   private active(): Tab | undefined {
-    return this.activeId === null ? undefined : this.find(this.activeId)
+    return this.activeId === null ? undefined : this.byId(this.activeId)
   }
 
   private info(t: Tab): TabInfo {
@@ -217,6 +305,7 @@ export class TabManager {
       canGoBack: nav?.canGoBack() ?? false,
       canGoForward: nav?.canGoForward() ?? false,
       pinned: t.pinned,
+      zoom: t.view?.webContents.getZoomFactor() ?? 1,
       discarded: t.view === null
     }
   }
@@ -238,9 +327,6 @@ export class TabManager {
       }
     })
     tab.view = view
-    view.setVisible(false)
-    this.opts.win.contentView.addChildView(view)
-    this.opts.win.contentView.addChildView(this.opts.ui)
     this.wire(tab, view.webContents)
     this.load(view.webContents, tab.url)
   }
@@ -283,6 +369,11 @@ export class TabManager {
     wc.on('did-navigate', (_e, url) => {
       tab.url = url
       this.emit()
+    })
+    wc.on('found-in-page', (_e, result) => {
+      if (tab.id === this.activeId && result.requestId >= this.findRequest) {
+        this.opts.onFind({ active: result.activeMatchOrdinal, total: result.matches })
+      }
     })
     wc.on('did-navigate-in-page', (_e, url, isMainFrame) => {
       if (!isMainFrame) return

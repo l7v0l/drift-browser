@@ -92,6 +92,7 @@ export class AppWindow {
       onChange: (state) => send(this.ui.webContents, 'tabs:changed', state),
       bindInput: (wc) => bindShortcuts(wc, (id) => this.runShortcut(id)),
       onVisit: isPrivate ? undefined : recordVisit,
+      onFind: (result) => send(this.ui.webContents, 'find:result', result),
       loadSession: () => (this.primary ? store.get('session') : { tabs: [], activeIndex: 0 }),
       saveSession: (data) => {
         if (this.primary) store.set('session', data)
@@ -105,6 +106,7 @@ export class AppWindow {
     this.win.on('leave-full-screen', () => this.layout())
     this.win.on('closed', () => {
       stopDownloads()
+      this.tabs.dispose()
       AppWindow.all.delete(this)
     })
     this.layout()
@@ -179,6 +181,19 @@ export class AppWindow {
         break
       case 'fullscreen':
         this.win.setFullScreen(!this.win.isFullScreen())
+        break
+      case 'find':
+        this.ui.webContents.focus()
+        send(this.ui.webContents, 'ui:open-find', null)
+        break
+      case 'zoom-in':
+        this.tabs.zoom('in')
+        break
+      case 'zoom-out':
+        this.tabs.zoom('out')
+        break
+      case 'zoom-reset':
+        this.tabs.zoom('reset')
         break
       case 'new-window':
         AppWindow.open(false)

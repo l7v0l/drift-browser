@@ -151,6 +151,16 @@ export function AddressBar({ trailing }: { trailing?: ReactNode }) {
             className="min-w-0 flex-1 bg-transparent outline-none"
             style={{ userSelect: 'text' }}
           />
+          {tab && tab.zoom !== 1 && (
+            <button
+              title={t('zoom.reset')}
+              onClick={() => void call('tabs:zoom', 'reset')}
+              className="shrink-0 rounded-full px-2 text-muted tabular-nums transition-colors duration-150 hover:bg-surface-3"
+              dir="ltr"
+            >
+              {Math.round(tab.zoom * 100)}%
+            </button>
+          )}
           {canBookmark && (
             <button
               aria-label={t('bookmarks.toggle')}

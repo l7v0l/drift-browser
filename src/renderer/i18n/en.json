@@ -1,5 +1,7 @@
 {
-  "app": { "tagline": "Browse light." },
+  "app": {
+    "tagline": "Browse light."
+  },
   "common": {
     "open": "Open",
     "delete": "Delete",
@@ -22,7 +24,9 @@
     "stop": "Stop",
     "home": "Home"
   },
-  "address": { "placeholder": "Search or enter address" },
+  "address": {
+    "placeholder": "Search or enter address"
+  },
   "menu": {
     "title": "Menu",
     "newWindow": "New window",
@@ -71,6 +75,25 @@
     "themeDark": "Dark",
     "searchEngine": "Search engine",
     "homepage": "Homepage",
-    "bookmarksBar": "Show bookmarks bar"
+    "bookmarksBar": "Show bookmarks bar",
+    "discard": "Discard idle tabs",
+    "discardOff": "Off",
+    "discardMinutes": "After {{count}} min"
+  },
+  "find": {
+    "placeholder": "Find in page",
+    "prev": "Previous",
+    "next": "Next",
+    "close": "Close find"
+  },
+  "zoom": {
+    "reset": "Reset zoom to 100%"
+  },
+  "about": {
+    "title": "About Drift",
+    "memory": "Memory usage",
+    "tabsSummary": "{{loaded}} active, {{discarded}} discarded",
+    "discarded": "Discarded",
+    "discard": "Discard"
   }
 }

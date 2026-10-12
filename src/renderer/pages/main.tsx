@@ -11,7 +11,8 @@ const pages = {
   settings: lazy(() => import('@features/settings/renderer/SettingsPage')),
   history: lazy(() => import('@features/history/renderer/HistoryPage')),
   bookmarks: lazy(() => import('@features/bookmarks/renderer/BookmarksPage')),
-  downloads: lazy(() => import('@features/downloads/renderer/DownloadsPage'))
+  downloads: lazy(() => import('@features/downloads/renderer/DownloadsPage')),
+  about: lazy(() => import('@features/about/renderer/AboutPage'))
 }
 
 function Pages() {

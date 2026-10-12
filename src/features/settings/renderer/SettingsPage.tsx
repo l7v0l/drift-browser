@@ -68,6 +68,20 @@ export default function SettingsPage() {
             className={`${field} w-64`}
           />
         </Row>
+        <Row label={t('settings.discard')}>
+          <select
+            value={settings.discardAfterMinutes}
+            onChange={(e) => void update({ discardAfterMinutes: Number(e.target.value) })}
+            className={field}
+          >
+            <option value={0}>{t('settings.discardOff')}</option>
+            {[10, 30, 60].map((m) => (
+              <option key={m} value={m}>
+                {t('settings.discardMinutes', { count: m })}
+              </option>
+            ))}
+          </select>
+        </Row>
         <Row label={t('settings.bookmarksBar')}>
           <input
             type="checkbox"
