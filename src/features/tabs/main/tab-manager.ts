@@ -28,6 +28,8 @@ export interface TabManagerOptions {
   bindInput: (wc: WebContents) => void
   onVisit?: (url: string, title: string) => void
   onFind: (result: FindResult) => void
+  /** Ads and trackers blocked on the page shown by this webContents. */
+  getBlocked: (webContentsId: number) => number
   /** A page reported its icon (used to fill in icons of existing bookmarks). */
   onFavicon?: (url: string, favicon: string) => void
   loadSession: () => SessionData
@@ -199,6 +201,11 @@ export class TabManager {
 
   stop(): void {
     this.active()?.view?.webContents.stop()
+  }
+
+  /** Push the current state to the UI (e.g. after a background counter changed). */
+  refresh(): void {
+    this.emit()
   }
 
   mute(id: number, muted: boolean): void {
@@ -408,6 +415,7 @@ export class TabManager {
       zoom: t.view?.webContents.getZoomFactor() ?? 1,
       audible: t.view?.webContents.isCurrentlyAudible() ?? false,
       muted: t.view?.webContents.audioMuted ?? false,
+      blocked: t.view ? this.opts.getBlocked(t.view.webContents.id) : 0,
       discarded: t.view === null
     }
   }

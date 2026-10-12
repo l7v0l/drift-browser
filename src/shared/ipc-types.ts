@@ -54,6 +54,7 @@ export interface IpcInvokeMap {
   'tabs:reopen-closed': Req
   'tabs:discard': Req<[id: number]>
   'tabs:split-toggle': Req
+  'adblock:status': Req<[], 'loading' | 'ready' | 'failed'>
   'extensions:list': Req<[], ExtensionSummary[]>
   'extensions:install': Req<[input: string], ExtensionSummary[]>
   'extensions:remove': Req<[id: string], ExtensionSummary[]>
@@ -151,6 +152,7 @@ const invokeAllow: Record<InvokeChannel, true> = {
   'tabs:reopen-closed': true,
   'tabs:discard': true,
   'tabs:split-toggle': true,
+  'adblock:status': true,
   'extensions:list': true,
   'extensions:install': true,
   'extensions:remove': true,
@@ -220,6 +222,7 @@ export const PAGE_INVOKE_CHANNELS: ReadonlySet<InvokeChannel> = new Set<InvokeCh
   'window:info',
   'account:get',
   'account:sign-out',
+  'adblock:status',
   'extensions:list',
   'extensions:install',
   'extensions:remove',

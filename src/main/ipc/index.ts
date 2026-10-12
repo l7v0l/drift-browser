@@ -26,7 +26,7 @@ import {
   removePassword,
   revealPassword
 } from '@features/passwords/main/passwords'
-import { accountService } from '../services'
+import { accountService, adblock } from '../services'
 import { AppWindow } from '../window'
 import { getSettings, patchSettings } from '../store'
 import { installUpdate } from '../updater'
@@ -98,6 +98,7 @@ export function registerIpc(): void {
     'tabs:reopen-closed': (w) => w.tabs.reopenClosed(),
     'tabs:discard': (w, id) => w.tabs.discard(Number(id)),
     'tabs:split-toggle': (w) => w.tabs.toggleSplit(),
+    'adblock:status': () => adblock.status,
     'extensions:list': () => listExtensions(),
     'extensions:install': async (_w, input) => extensionsChanged(await installById(String(input))),
     'extensions:remove': async (_w, id) => extensionsChanged(await removeById(String(id))),

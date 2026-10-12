@@ -4,6 +4,7 @@ import { registerPasswordChannels } from '@features/passwords/main/channel'
 import { registerIpc } from './ipc'
 import { registerDriftScheme } from './protocol'
 import { setupAutoUpdate } from './updater'
+import { adblock } from './services'
 import { showSplash } from './splash'
 import { AppWindow } from './window'
 
@@ -32,6 +33,7 @@ if (!app.requestSingleInstanceLock()) {
     // Load installed extensions before any page opens; a failure (e.g. offline) must not block startup.
     await setupExtensions().catch((error: Error) => console.warn('[extensions]', error.message))
     registerPasswordChannels()
+    void adblock.init()
     const first = AppWindow.open(false, splash.minTimeElapsed)
     first.win.once('show', () => splash.close())
     setupAutoUpdate()

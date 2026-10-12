@@ -8,9 +8,9 @@ import { recordVisit } from '@features/history/main/history'
 import { TabManager } from '@features/tabs/main/tab-manager'
 import { bindShortcuts, type ShortcutId } from '@features/tabs/main/shortcuts'
 import { send } from './ipc/send'
-import { attachLoginHint } from '@features/account/main/attach'
 import { registerDriftHandler } from './protocol'
-import { accountService } from './services'
+import { attachRequestPipeline } from './requests'
+import { accountService, adblock } from './services'
 import { getSettings, store } from './store'
 
 let normalDownloads: DownloadManager | null = null
@@ -62,7 +62,10 @@ export class AppWindow {
     const partition = isPrivate ? `drift-private-${++privateCount}` : NORMAL_PARTITION
     const ses = session.fromPartition(partition)
     registerDriftHandler(ses)
-    if (!isPrivate) attachLoginHint(ses, () => accountService.get()?.email ?? null)
+    attachRequestPipeline(ses, {
+      adblock,
+      getEmail: () => (isPrivate ? null : (accountService.get()?.email ?? null))
+    })
 
     if (isPrivate) this.downloads = new DownloadManager(ses, false)
     else this.downloads = normalDownloads ??= new DownloadManager(ses, true)
@@ -102,6 +105,7 @@ export class AppWindow {
       onChange: (state) => send(this.ui.webContents, 'tabs:changed', state),
       bindInput: (wc) => bindShortcuts(wc, (id) => this.runShortcut(id)),
       onVisit: isPrivate ? undefined : recordVisit,
+      getBlocked: (webContentsId) => adblock.blockedFor(webContentsId),
       onFind: (result) => send(this.ui.webContents, 'find:result', result),
       onFavicon: isPrivate
         ? undefined

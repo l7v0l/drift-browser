@@ -54,6 +54,10 @@ Signed-in forms are noticed by `src/preload/forms.ts`, which runs in the preload
 
 `features/extensions/main` installs extensions from the Chrome Web Store into the normal session using `electron-chrome-web-store` (MIT) and Electron's built-in `session.extensions`. See [docs/EXTENSIONS.md](docs/EXTENSIONS.md) for what that does and does not support.
 
+## Ad blocker
+
+`features/adblock/main/adblock.ts` wraps Ghostery's engine (MPL-2.0). The engine is downloaded once and cached in the user data folder. Electron allows a single `webRequest.onBeforeRequest` handler per session, so `main/requests.ts` owns it and runs sign-in pre-fill and then ad blocking. Cosmetic filters are injected by a frame preload registered on each session. Blocked counts are kept per webContents and reset on navigation; the allowlist and on/off switch are ordinary settings.
+
 ## Startup
 
 `main/splash.ts` shows a small frameless animated window immediately; the main window is created hidden and shown once the chrome has loaded and the splash has played. After an update, the chrome shows a "What's new" dialog from `shared/changelog.ts`.

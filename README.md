@@ -28,6 +28,7 @@ A small, fast desktop browser with first-class Arabic (RTL) and English support.
 - **New tab page** – clock, Hijri and Gregorian dates, big search box, editable shortcuts
 - **Bookmarks, history, downloads** – star button, bookmarks bar, searchable history with clear-by-range, download panel with progress
 - **Private windows** – nothing is saved: no history, cookies or session
+- **Ad blocker** – built in (Ghostery engine, EasyList-compatible): blocks ads and trackers, hides leftover ad boxes, shield with a counter in the toolbar, per-site on/off
 - **Password manager** – offers to save logins when you sign in or sign up, fills them in next time; encrypted with your OS key (Windows DPAPI), manage them at `drift://passwords`
 - **Extensions** – install from the Chrome Web Store, icons in the toolbar (basic Chrome extension API, see [docs/EXTENSIONS.md](docs/EXTENSIONS.md))
 - **Split view** – two pages side by side

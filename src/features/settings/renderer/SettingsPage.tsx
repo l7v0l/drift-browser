@@ -82,6 +82,14 @@ export default function SettingsPage() {
             ))}
           </select>
         </Row>
+        <Row label={t('adblock.enabled')}>
+          <input
+            type="checkbox"
+            checked={settings.adblockEnabled}
+            onChange={(e) => void update({ adblockEnabled: e.target.checked })}
+            className="h-5 w-5 accent-[var(--accent)]"
+          />
+        </Row>
         <Row label={t('settings.bookmarksBar')}>
           <input
             type="checkbox"

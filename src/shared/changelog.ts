@@ -7,6 +7,20 @@ export interface ChangelogEntry {
 /** Newest first. Shown in the "What's new" window after an update. */
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '0.3.0',
+    date: '2026-10-13',
+    items: [
+      {
+        ar: 'حاجب إعلانات ومتتبعات مدمج: درع في الشريط يعرض عدد المحجوب',
+        en: 'Built-in ad and tracker blocker: a shield in the toolbar shows how many were blocked'
+      },
+      {
+        ar: 'تشغيل أو إيقاف الحجب لكل موقع أو لكل المتصفح',
+        en: 'Turn blocking on or off per site, or for the whole browser'
+      }
+    ]
+  },
+  {
     version: '0.2.0',
     date: '2026-10-13',
     items: [

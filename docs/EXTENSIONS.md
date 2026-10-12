@@ -8,7 +8,7 @@ Extensions are loaded through Electron's built-in extension support. That covers
 
 ## What does not (yet)
 
-- **`declarativeNetRequest` (most ad blockers).** Electron does not implement it, so blockers such as uBlock Origin Lite install but do not block. Drift's own ad blocker is planned for v0.3.
+- **`declarativeNetRequest` (most ad blockers).** Electron does not implement it, so blockers such as uBlock Origin Lite install but do not block. Use Drift's own built-in ad blocker (shield in the toolbar) instead.
 - **`chrome.tabs` events and other browser-UI APIs.** Some extension background workers throw errors such as "Cannot read properties of undefined (reading 'onRemoved')".
 - **Popups** open in a small window under the toolbar and can only use the APIs above.
 - Private windows use no extensions.

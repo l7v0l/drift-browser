@@ -18,6 +18,10 @@ export interface Settings {
   savePasswords: boolean
   /** Fill saved passwords into sign-in forms automatically. */
   autofillPasswords: boolean
+  /** Block ads and trackers. */
+  adblockEnabled: boolean
+  /** Sites (hostnames) where blocking is turned off. */
+  adblockAllowlist: string[]
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -30,7 +34,9 @@ export const DEFAULT_SETTINGS: Settings = {
   onboardingDone: false,
   lastSeenVersion: '',
   savePasswords: true,
-  autofillPasswords: true
+  autofillPasswords: true,
+  adblockEnabled: true,
+  adblockAllowlist: []
 }
 
 export interface TabInfo {
@@ -47,6 +53,8 @@ export interface TabInfo {
   /** The page is playing sound right now. */
   audible: boolean
   muted: boolean
+  /** Ads and trackers blocked on the current page. */
+  blocked: number
   /** True when the tab has no live page (restored or unloaded) and loads on activation. */
   discarded: boolean
 }

@@ -18,6 +18,7 @@ const PATHS = {
   trash: 'M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13',
   volume: 'M4 9v6h4l5 4V5L8 9zM16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11',
   'volume-off': 'M4 9v6h4l5 4V5L8 9zM17 9l5 6M22 9l-5 6',
+  shield: 'M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6zM9 12l2 2 4-4',
   clock: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2',
   printer: 'M7 9V4h10v5M6 17H4v-7h16v7h-2M7 14h10v6H7z',
   code: 'M9 7l-5 5 5 5M15 7l5 5-5 5',

@@ -6,16 +6,19 @@ Drift stays small on purpose. Each version adds one theme of features; none shou
 
 Tabs, address bar and suggestions, new tab page, bookmarks, history, downloads, private windows, find in page, zoom, settings, keyboard shortcuts, session restore, tab discarding, `drift://` pages, optional Google / Microsoft sign-in, installer + portable build, auto-update.
 
-## v0.2 – daily-driver basics (current)
+## v0.2 – daily-driver basics
 
 - **Password manager** – save / update prompt, autofill, encrypted storage, `drift://passwords`
 - **Extensions (basic)** – Chrome Web Store install, toolbar icons, `drift://extensions`
 - **Split view**, tab menu (mute, duplicate, close others), reorganised main menu
 - Animated startup screen, "What's new" window and in-app "restart to update" after each release
 
-## v0.3 – cleaner pages, better tab management
+## v0.3 – cleaner pages (current)
 
-- **Ad blocker** – network-level blocking with a bundled filter list, per-site toggle, blocked-count badge (Electron has no `declarativeNetRequest`, so this is built in, not an extension)
+- **Ad blocker** – built in: network blocking with the Ghostery engine, cosmetic filtering, per-site toggle, blocked-count badge (Electron has no `declarativeNetRequest`, so this is built in, not an extension)
+
+## v0.3.x – better tab management
+
 - **Vertical tabs** – optional sidebar tab list, collapsible, pinned tabs on top
 - **Extensions, full API** – popups and `chrome.tabs` events (needs a licence decision, see docs/EXTENSIONS.md)
 

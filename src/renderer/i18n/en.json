@@ -175,5 +175,14 @@
     "ready": "Drift {{version}} is ready",
     "restart": "Restart now",
     "later": "Later"
+  },
+  "adblock": {
+    "title": "Ad blocker",
+    "enabled": "Block ads and trackers",
+    "thisSite": "Block on this site",
+    "blockedHere": "Blocked on this page:",
+    "loading": "Loading block lists…",
+    "failed": "Could not load block lists. Check your connection and restart Drift.",
+    "allowlistTitle": "Sites without blocking"
   }
 }

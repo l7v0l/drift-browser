@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { AddressBar } from '@features/addressbar/renderer/AddressBar'
+import { AdBlockButton } from '@features/adblock/renderer/AdBlockButton'
 import { BookmarksBar } from '@features/bookmarks/renderer/BookmarksBar'
 import { startBookmarksSync } from '@features/bookmarks/renderer/store'
 import { DownloadsButton } from '@features/downloads/renderer/DownloadsButton'
@@ -81,6 +82,7 @@ export function App() {
       <AddressBar
         trailing={
           <>
+            <AdBlockButton />
             {!isPrivate && <ExtensionsBar />}
             <DownloadsButton />
             {!isPrivate && <AccountButton />}

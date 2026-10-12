@@ -4,6 +4,12 @@ const HINT_PATHS: Record<string, RegExp> = {
   'login.live.com': /^\/oauth20_authorize\.srf$/
 }
 
+/** Cheap pre-check so the hot request path does not parse every URL. */
+export const mayNeedLoginHint = (url: string): boolean =>
+  url.startsWith('https://accounts.google.com/') ||
+  url.startsWith('https://login.microsoftonline.com/') ||
+  url.startsWith('https://login.live.com/')
+
 export const LOGIN_HINT_URLS = Object.keys(HINT_PATHS).map((host) => `https://${host}/*`)
 
 /**
