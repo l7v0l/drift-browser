@@ -12,7 +12,7 @@
 ![Platform](https://img.shields.io/badge/platform-Windows-0A3F43)
 ![Electron](https://img.shields.io/badge/Electron-44-F4BE4E)
 
-[English](README.md) · العربية
+[الموقع](https://drift-browser.netlify.app) · [التحميل](https://github.com/l7v0l/drift-browser/releases/latest) · [English](README.md) · العربية
 
 </div>
 

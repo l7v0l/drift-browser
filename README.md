@@ -12,7 +12,7 @@ A small, fast desktop browser with first-class Arabic (RTL) and English support.
 ![Platform](https://img.shields.io/badge/platform-Windows-0A3F43)
 ![Electron](https://img.shields.io/badge/Electron-44-F4BE4E)
 
-English · [العربية](README.ar.md)
+[Website](https://drift-browser.netlify.app) · [Download](https://github.com/l7v0l/drift-browser/releases/latest) · English · [العربية](README.ar.md)
 
 </div>
 
@@ -39,48 +39,3 @@ English · [العربية](README.ar.md)
   <img src="docs/screenshots/page-en-dark.png" alt="Browsing a page with bookmarks bar" width="49%" />
   <img src="docs/screenshots/about-ar.png" alt="About page with memory usage per tab" width="49%" />
 </p>
-
-### Keyboard shortcuts
-
-| Shortcut | Action |
-| --- | --- |
-| `Ctrl+T` / `Ctrl+W` | New tab / close tab |
-| `Ctrl+Shift+T` | Reopen closed tab |
-| `Ctrl+L` | Focus address bar |
-| `Ctrl+Tab` / `Ctrl+Shift+Tab` | Next / previous tab |
-| `Ctrl+F` | Find in page |
-| `Ctrl +` / `Ctrl -` / `Ctrl 0` | Zoom in / out / reset |
-| `Ctrl+N` / `Ctrl+Shift+N` | New window / private window |
-| `F5` / `F11` | Reload / fullscreen |
-
-## Install
-
-Download the latest build from [**Releases**](https://github.com/l7v0l/drift-browser/releases):
-
-- `Drift-Setup-x.y.z.exe` – installer (auto-updates from GitHub Releases)
-- `Drift-x.y.z-portable.exe` – portable, no install, no auto-update
-
-> Builds are not code-signed yet, so Windows SmartScreen may warn on first run. Choose **More info → Run anyway**.
-
-## Development
-
-Requires Node.js 22+.
-
-```bash
-npm install
-npm run dev        # run with hot reload
-npm run typecheck  # TypeScript
-npm run lint       # ESLint
-npm test           # Vitest
-npm run dist       # build the Windows installer + portable into ./release
-```
-
-Code is organised by feature; see [ARCHITECTURE.md](ARCHITECTURE.md). Planned work is in [ROADMAP.md](ROADMAP.md). Contributions are welcome, see [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## Tech
-
-Electron · React · TypeScript · Vite (electron-vite) · Tailwind CSS · Zustand · electron-store · electron-updater · Vitest. Pages render in `WebContentsView`, with `contextIsolation`, `sandbox` and no `nodeIntegration`; all IPC goes through a typed, allow-listed bridge.
-
-## License
-
-[MIT](LICENSE)
