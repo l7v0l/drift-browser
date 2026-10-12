@@ -10,8 +10,15 @@ function save(items: Bookmark[]): Bookmark[] {
   return items
 }
 
-export const toggle = (url: string, title: string): Bookmark[] =>
-  save(toggleBookmark(listBookmarks(), url, title, randomUUID, Date.now()))
+export const toggle = (url: string, title: string, favicon: string | null): Bookmark[] =>
+  save(toggleBookmark(listBookmarks(), url, title, favicon, randomUUID, Date.now()))
+
+/** Fill in the icon of an existing bookmark once its page reports one. Returns the new list if changed. */
+export function setBookmarkFavicon(url: string, favicon: string): Bookmark[] | null {
+  const items = listBookmarks()
+  if (!items.some((b) => b.url === url && b.favicon !== favicon)) return null
+  return save(items.map((b) => (b.url === url ? { ...b, favicon } : b)))
+}
 
 export const removeBookmark = (id: string): Bookmark[] =>
   save(listBookmarks().filter((b) => b.id !== id))

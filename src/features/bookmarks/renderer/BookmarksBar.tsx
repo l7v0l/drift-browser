@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { Favicon } from '@renderer/components/Favicon'
 import { BOOKMARKS_BAR_HEIGHT } from '@shared/constants'
 import { useBookmarks } from './store'
 
@@ -20,9 +21,10 @@ export function BookmarksBar() {
           title={b.url}
           onClick={() => void call('tabs:navigate', b.url)}
           onAuxClick={(e) => e.button === 1 && void call('tabs:create', b.url)}
-          className="max-w-[160px] shrink-0 truncate rounded-full px-3 py-1 transition-colors duration-150 hover:bg-surface-2"
+          className="flex max-w-[180px] shrink-0 items-center gap-2 rounded-full px-3 py-1 transition-colors duration-150 hover:bg-surface-2"
         >
-          {b.title}
+          <Favicon src={b.favicon} />
+          <span className="truncate">{b.title}</span>
         </button>
       ))}
     </nav>

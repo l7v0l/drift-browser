@@ -28,6 +28,8 @@ export interface TabManagerOptions {
   bindInput: (wc: WebContents) => void
   onVisit?: (url: string, title: string) => void
   onFind: (result: FindResult) => void
+  /** A page reported its icon (used to fill in icons of existing bookmarks). */
+  onFavicon?: (url: string, favicon: string) => void
   loadSession: () => SessionData
   saveSession: (session: SessionData) => void
 }
@@ -350,6 +352,7 @@ export class TabManager {
     })
     wc.on('page-favicon-updated', (_e, favicons) => {
       tab.favicon = favicons[0] ?? null
+      if (tab.favicon) this.opts.onFavicon?.(wc.getURL(), tab.favicon)
       this.emit()
     })
     wc.on('did-start-loading', () => {

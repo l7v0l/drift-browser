@@ -165,7 +165,9 @@ export function AddressBar({ trailing }: { trailing?: ReactNode }) {
             <button
               aria-label={t('bookmarks.toggle')}
               title={t('bookmarks.toggle')}
-              onClick={() => void call('bookmarks:toggle', url, tab?.title ?? '')}
+              onClick={() =>
+                void call('bookmarks:toggle', url, tab?.title ?? '', tab?.favicon ?? null)
+              }
               className={`shrink-0 transition-colors duration-150 ${
                 bookmarked ? 'text-accent' : 'text-muted hover:text-ink'
               }`}

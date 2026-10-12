@@ -14,10 +14,11 @@ export function toggleBookmark(
   items: Bookmark[],
   url: string,
   title: string,
+  favicon: string | null,
   makeId: () => string,
   now: number
 ): Bookmark[] {
   return items.some((b) => b.url === url)
     ? items.filter((b) => b.url !== url)
-    : [...items, { id: makeId(), url, title: title || url, createdAt: now }]
+    : [...items, { id: makeId(), url, title: title || url, favicon, createdAt: now }]
 }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Favicon } from '@renderer/components/Favicon'
 import { Icon } from '@renderer/components/Icon'
 import { PageShell, field } from '@renderer/pages/PageShell'
 import type { Bookmark } from '@shared/types'
@@ -20,7 +21,8 @@ function Row({ item }: { item: Bookmark }) {
   }
 
   return (
-    <li className="flex items-center gap-2 rounded-2xl bg-surface p-3">
+    <li className="flex items-center gap-3 rounded-2xl bg-surface p-3">
+      <Favicon src={item.favicon} size={20} />
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <input
           value={title}

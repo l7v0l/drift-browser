@@ -32,6 +32,7 @@ export interface IpcInvokeMap {
   'account:get': Req<[], Account | null>
   'account:sign-in': Req<[provider: AccountProvider], Account>
   'account:confirm': Req<[save: boolean], Account | null>
+  'account:use-email': Req<[provider: AccountProvider, email: string], Account>
   'account:cancel': Req
   'account:sign-out': Req
   'window:new': Req<[isPrivate: boolean]>
@@ -56,7 +57,7 @@ export interface IpcInvokeMap {
   'ui:set-overlay': Req<[open: boolean]>
   'ui:set-chrome-height': Req<[height: number]>
   'bookmarks:list': Req<[], Bookmark[]>
-  'bookmarks:toggle': Req<[url: string, title: string], Bookmark[]>
+  'bookmarks:toggle': Req<[url: string, title: string, favicon: string | null], Bookmark[]>
   'bookmarks:remove': Req<[id: string], Bookmark[]>
   'bookmarks:update': Req<[id: string, patch: { title?: string; url?: string }], Bookmark[]>
   'history:list': Req<[query?: string], HistoryEntry[]>
@@ -103,6 +104,7 @@ const invokeAllow: Record<InvokeChannel, true> = {
   'account:get': true,
   'account:sign-in': true,
   'account:confirm': true,
+  'account:use-email': true,
   'account:cancel': true,
   'account:sign-out': true,
   'window:new': true,

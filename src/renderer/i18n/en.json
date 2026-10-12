@@ -109,6 +109,11 @@
     "signIn": "Sign in",
     "signOut": "Sign out",
     "notConfigured": "Sign-in is not configured yet. See docs/SIGN_IN.md.",
-    "failed": "Sign-in failed. Please try again."
+    "failed": "Sign-in failed. Please try again.",
+    "emailTitle": "Your {{provider}} email",
+    "emailText": "Enter your email. It is kept on this device and pre-filled when you sign in to sites.",
+    "invalidEmail": "Enter a valid email like name@gmail.com",
+    "continue": "Continue",
+    "back": "Back"
   }
 }

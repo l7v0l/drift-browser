@@ -13,6 +13,8 @@ import {
 
 type Configs = Record<AccountProvider, ProviderConfig>
 
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 /**
  * Sign-in with Google / Microsoft via the system browser (OAuth code flow + PKCE).
  * Only the profile (email, name, picture) is kept, and only when the user confirms "Save".
@@ -67,6 +69,23 @@ export class AccountService {
       if (this.loopback === loopback) this.loopback = null
       loopback.close()
     }
+  }
+
+  /**
+   * Sign-in without OAuth: the user types their own address. It is not verified with the
+   * provider, so it is only used to pre-fill sign-in pages, never as proof of identity.
+   */
+  useEmail(provider: AccountProvider, email: string): Account {
+    const address = email.trim()
+    if (!EMAIL_PATTERN.test(address)) throw new Error('invalid-email')
+    const local = address.split('@')[0]
+    this.pending = {
+      provider,
+      email: address,
+      name: local.charAt(0).toUpperCase() + local.slice(1),
+      picture: null
+    }
+    return this.pending
   }
 
   /** Save: keep the account on this device. Cancel: discard the sign-in. */

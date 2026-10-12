@@ -3,6 +3,7 @@ import { BrowserWindow, session, WebContentsView, type Rectangle, type WebConten
 import { CHROME_HEIGHT, NEW_TAB_URL, NORMAL_PARTITION } from '@shared/constants'
 import type { EventChannel, IpcEventMap } from '@shared/ipc-types'
 import { DownloadManager } from '@features/downloads/main/downloads'
+import { setBookmarkFavicon } from '@features/bookmarks/main/bookmarks'
 import { recordVisit } from '@features/history/main/history'
 import { TabManager } from '@features/tabs/main/tab-manager'
 import { bindShortcuts, type ShortcutId } from '@features/tabs/main/shortcuts'
@@ -101,6 +102,12 @@ export class AppWindow {
       bindInput: (wc) => bindShortcuts(wc, (id) => this.runShortcut(id)),
       onVisit: isPrivate ? undefined : recordVisit,
       onFind: (result) => send(this.ui.webContents, 'find:result', result),
+      onFavicon: isPrivate
+        ? undefined
+        : (url, favicon) => {
+            const changed = setBookmarkFavicon(url, favicon)
+            if (changed) AppWindow.broadcast('bookmarks:changed', changed)
+          },
       loadSession: () => (this.primary ? store.get('session') : { tabs: [], activeIndex: 0 }),
       saveSession: (data) => {
         if (this.primary) store.set('session', data)

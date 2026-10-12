@@ -59,6 +59,7 @@ export function registerIpc(): void {
     'account:get': () => accountService.get(),
     'account:sign-in': (_w, provider) => accountService.signIn(provider),
     'account:confirm': (_w, save) => accountService.confirm(Boolean(save)),
+    'account:use-email': (_w, provider, email) => accountService.useEmail(provider, String(email)),
     'account:cancel': () => accountService.cancel(),
     'account:sign-out': () => accountService.signOut(),
     'window:new': (_w, isPrivate) => {
@@ -88,8 +89,10 @@ export function registerIpc(): void {
     'ui:set-overlay': (w, open) => w.setOverlay(Boolean(open)),
     'ui:set-chrome-height': (w, height) => w.setChromeHeight(Number(height)),
     'bookmarks:list': () => listBookmarks(),
-    'bookmarks:toggle': (_w, url, title) =>
-      bookmarksChanged(toggleBookmark(String(url), String(title))),
+    'bookmarks:toggle': (_w, url, title, favicon) =>
+      bookmarksChanged(
+        toggleBookmark(String(url), String(title), favicon ? String(favicon) : null)
+      ),
     'bookmarks:remove': (_w, id) => bookmarksChanged(removeBookmark(String(id))),
     'bookmarks:update': (_w, id, patch) => bookmarksChanged(updateBookmark(String(id), patch)),
     'history:list': (_w, query) => listHistory(query === undefined ? undefined : String(query)),

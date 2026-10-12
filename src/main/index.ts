@@ -6,6 +6,13 @@ import { AppWindow } from './window'
 
 registerDriftScheme()
 
+// Google answers with a "not a robot" check when the user agent names Electron or the app.
+// Present as plain Chromium, which is what the engine is.
+app.userAgentFallback = app.userAgentFallback.replace(
+  /\s(?:Electron|Drift|drift-browser)\/\S+/g,
+  ''
+)
+
 if (!app.requestSingleInstanceLock()) {
   app.quit()
 } else {

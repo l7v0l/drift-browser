@@ -7,6 +7,10 @@ Drift can remember a Google or Microsoft (Hotmail / Outlook) account. This is **
 
 On first launch Drift offers to sign in (or **Not now**). After a successful sign-in you choose **Save** (kept on this device) or **Cancel** (discarded). Sign out any time from the account button. Private windows never use the account.
 
+## Without an OAuth client id
+
+This is the default for a build that has no client ids (such as the official release): choosing Google or Microsoft asks you to type your email address instead. It is kept on this device, shown in the toolbar and pre-filled on sign-in pages. It is **not verified** with the provider. To get real, verified sign-in, set up the client ids below.
+
 ## What is stored
 
 Only the profile: provider, email, name and picture URL. No password and no tokens: the access token is used once to read the profile and then dropped.

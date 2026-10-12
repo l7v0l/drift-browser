@@ -72,6 +72,8 @@ export interface Bookmark {
   id: string
   title: string
   url: string
+  /** Site icon URL captured when the page was bookmarked (null if unknown yet). */
+  favicon: string | null
   createdAt: number
 }
 

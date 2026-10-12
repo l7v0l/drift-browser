@@ -3,16 +3,26 @@ import { filterBookmarks, toggleBookmark } from '@features/bookmarks/main/search
 import { listEntries, pruneHistory } from '@features/history/main/prune'
 import { isNewTabUrl } from '@shared/url'
 
-const bm = (id: string, url: string, title: string) => ({ id, url, title, createdAt: 0 })
+const bm = (id: string, url: string, title: string) => ({
+  id,
+  url,
+  title,
+  favicon: null,
+  createdAt: 0
+})
 
 describe('bookmarks', () => {
   it('toggles on and off by url', () => {
-    const added = toggleBookmark([], 'https://a.com', 'A', () => 'id1', 5)
-    expect(added).toEqual([{ id: 'id1', url: 'https://a.com', title: 'A', createdAt: 5 }])
-    expect(toggleBookmark(added, 'https://a.com', 'A', () => 'id2', 6)).toEqual([])
+    const added = toggleBookmark([], 'https://a.com', 'A', null, () => 'id1', 5)
+    expect(added).toEqual([
+      { id: 'id1', url: 'https://a.com', title: 'A', favicon: null, createdAt: 5 }
+    ])
+    expect(toggleBookmark(added, 'https://a.com', 'A', null, () => 'id2', 6)).toEqual([])
   })
   it('falls back to the url when the title is empty', () => {
-    expect(toggleBookmark([], 'https://a.com', '', () => 'x', 0)[0].title).toBe('https://a.com')
+    expect(toggleBookmark([], 'https://a.com', '', null, () => 'x', 0)[0].title).toBe(
+      'https://a.com'
+    )
   })
   it('filters by title or url', () => {
     const items = [bm('1', 'https://a.com', 'Alpha'), bm('2', 'https://b.com', 'Beta')]

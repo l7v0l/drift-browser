@@ -26,7 +26,24 @@ function ProviderButton(props: { provider: AccountProvider; label: string; onCli
       className="flex w-full items-center justify-center gap-3 rounded-full border border-line bg-surface-2 px-4 py-2.5 transition-colors duration-150 hover:bg-surface-3"
     >
       {props.provider === 'google' ? (
-        <span className="text-lg font-bold text-[#4285F4]">G</span>
+        <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
+          <path
+            fill="#EA4335"
+            d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+          />
+          <path
+            fill="#4285F4"
+            d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
+          />
+          <path
+            fill="#FBBC05"
+            d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
+          />
+          <path
+            fill="#34A853"
+            d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+          />
+        </svg>
       ) : (
         <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
           <rect width="8.5" height="8.5" fill="#F25022" />
@@ -55,10 +72,58 @@ function Avatar({ account }: { account: Account }) {
   )
 }
 
+function EmailStep(props: {
+  provider: AccountProvider | null
+  error: string | null
+  onSubmit: (email: string) => void
+  onBack: () => void
+}) {
+  const { t } = useTranslation()
+  const [email, setEmail] = useState('')
+  const name = props.provider === 'microsoft' ? 'Microsoft' : 'Google'
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault()
+        props.onSubmit(email)
+      }}
+    >
+      <h2 className="mb-1 text-xl font-semibold">{t('account.emailTitle', { provider: name })}</h2>
+      <p className="mb-4 text-muted">{t('account.emailText')}</p>
+      <input
+        autoFocus
+        type="email"
+        dir="ltr"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder={props.provider === 'microsoft' ? 'name@hotmail.com' : 'name@gmail.com'}
+        className="w-full rounded-full border border-line bg-surface-2 px-4 py-2.5 outline-none focus:ring-2 focus:ring-accent"
+        style={{ userSelect: 'text' }}
+      />
+      {props.error && <p className="mt-2 text-sm text-[#d4482a]">{props.error}</p>}
+      <div className="mt-4 flex gap-2">
+        <button
+          type="submit"
+          className="flex-1 rounded-full bg-accent px-4 py-2 text-accent-ink transition-opacity duration-150 hover:opacity-90"
+        >
+          {t('account.continue')}
+        </button>
+        <button
+          type="button"
+          onClick={props.onBack}
+          className="flex-1 rounded-full border border-line px-4 py-2 transition-colors duration-150 hover:bg-surface-2"
+        >
+          {t('account.back')}
+        </button>
+      </div>
+    </form>
+  )
+}
+
 /** Splash animation, then the optional sign-in prompt, then a Save / Cancel confirmation. */
 export function Onboarding({ intro }: { intro: boolean }) {
   const { t } = useTranslation()
-  const { phase, pending, error, set } = useAccount()
+  const { phase, pending, provider, error, set } = useAccount()
   const showSplash = phase === 'splash'
   useOverlay(phase !== 'done')
 
@@ -84,20 +149,28 @@ export function Onboarding({ intro }: { intro: boolean }) {
   }
 
   const signIn = async (provider: AccountProvider) => {
-    set({ phase: 'waiting', error: null })
+    set({ phase: 'waiting', error: null, provider })
     try {
       set({ pending: await call('account:sign-in', provider), phase: 'confirm' })
     } catch (e) {
       const message = e instanceof Error ? e.message : ''
-      const cancelled = message.includes('cancelled')
+      // No OAuth client id in this build: fall back to typing the email address.
+      if (message.includes('not-configured')) return set({ phase: 'email', error: null })
+      set({ phase: 'welcome', error: message.includes('cancelled') ? null : t('account.failed') })
+    }
+  }
+
+  const submitEmail = async (email: string) => {
+    const provider = useAccount.getState().provider
+    if (!provider) return
+    try {
       set({
-        phase: 'welcome',
-        error: cancelled
-          ? null
-          : message.includes('not-configured')
-            ? t('account.notConfigured')
-            : t('account.failed')
+        pending: await call('account:use-email', provider, email),
+        phase: 'confirm',
+        error: null
       })
+    } catch {
+      set({ error: t('account.invalidEmail') })
     }
   }
 
@@ -134,6 +207,19 @@ export function Onboarding({ intro }: { intro: boolean }) {
         >
           {t('account.notNow')}
         </button>
+      </Card>
+    )
+  }
+
+  if (phase === 'email') {
+    return (
+      <Card>
+        <EmailStep
+          provider={provider}
+          error={error}
+          onSubmit={(email) => void submitEmail(email)}
+          onBack={() => set({ phase: 'welcome', error: null })}
+        />
       </Card>
     )
   }
