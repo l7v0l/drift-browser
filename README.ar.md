@@ -42,49 +42,4 @@
   <img src="docs/screenshots/about-ar.png" alt="صفحة حول واستهلاك الذاكرة" width="49%" />
 </p>
 
-### اختصارات لوحة المفاتيح
-
-| الاختصار | الوظيفة |
-| --- | --- |
-| `Ctrl+T` / `Ctrl+W` | تبويب جديد / إغلاق التبويب |
-| `Ctrl+Shift+T` | إعادة فتح التبويب المغلق |
-| `Ctrl+L` | التركيز على شريط العنوان |
-| `Ctrl+Tab` / `Ctrl+Shift+Tab` | التبويب التالي / السابق |
-| `Ctrl+F` | البحث في الصفحة |
-| `Ctrl +` / `Ctrl -` / `Ctrl 0` | تكبير / تصغير / إعادة |
-| `Ctrl+N` / `Ctrl+Shift+N` | نافذة جديدة / نافذة خاصة |
-| `F5` / `F11` | تحديث / ملء الشاشة |
-
-## التثبيت
-
-حمّل آخر نسخة من صفحة [**Releases**](https://github.com/l7v0l/drift-browser/releases):
-
-- `Drift-Setup-x.y.z.exe`: ملف التثبيت، ويتحدث تلقائياً من GitHub Releases
-- `Drift-x.y.z-portable.exe`: نسخة محمولة بدون تثبيت وبدون تحديث تلقائي
-
-> النسخ غير موقّعة رقمياً حالياً، فقد يعرض Windows SmartScreen تحذيراً أول مرة. اختر **More info ثم Run anyway**.
-
-## التطوير
-
-يحتاج Node.js 22 أو أحدث.
-
-```bash
-npm install
-npm run dev        # تشغيل بوضع التطوير
-npm run typecheck  # فحص TypeScript
-npm run lint       # ESLint
-npm test           # اختبارات Vitest
-npm run dist       # بناء ملف التثبيت والنسخة المحمولة في ./release
-```
-
-الكود منظم حسب الميزة، راجع [ARCHITECTURE.md](ARCHITECTURE.md). الخطة القادمة في [ROADMAP.md](ROADMAP.md). المساهمات مرحّب بها، راجع [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## التقنيات
-
-Electron وReact وTypeScript وVite (electron-vite) وTailwind CSS وZustand وelectron-store وelectron-updater وVitest. المواقع تُعرض في `WebContentsView` مع `contextIsolation` و`sandbox` وبدون `nodeIntegration`، وكل التواصل بين الأجزاء عبر IPC محدد ومكتوب الأنواع.
-
-## الترخيص
-
-[MIT](LICENSE)
-
 </div>
