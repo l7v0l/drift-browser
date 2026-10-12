@@ -22,7 +22,7 @@ function Row({ item }: { item: Bookmark }) {
 
   return (
     <li className="flex items-center gap-3 rounded-2xl bg-surface p-3">
-      <Favicon src={item.favicon} size={20} />
+      <Favicon src={item.favicon} url={item.url} size={20} />
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <input
           value={title}

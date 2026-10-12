@@ -8,6 +8,7 @@ interface TabsStore extends TabsState {
 export const useTabs = create<TabsStore>((set) => ({
   tabs: [],
   activeId: null,
+  split: null,
   set: (state) => set(state)
 }))
 

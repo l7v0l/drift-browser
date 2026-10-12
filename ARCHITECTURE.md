@@ -27,7 +27,7 @@ src/
    └─ renderer/     React components and stores for the feature
 ```
 
-Features: `tabs`, `addressbar`, `bookmarks`, `history`, `downloads`, `newtab`, `settings`, `find`, `about`, `account`, `splash`, `menu`.
+Features: `tabs`, `addressbar`, `bookmarks`, `history`, `downloads`, `newtab`, `settings`, `find`, `about`, `account`, `menu`, `passwords`, `extensions`, `notices`.
 
 `tests/` holds Vitest tests for the pure logic of each feature.
 
@@ -41,6 +41,22 @@ A window is a `BrowserWindow` with several `WebContentsView`s stacked inside it:
 The chrome view is transparent and only as tall as the chrome. Dropdowns need to draw over native page views, so while one is open the renderer calls `ui:set-overlay` and main grows the chrome view to the full window (`useOverlay`).
 
 `TabManager` (`features/tabs/main`) owns tab state. Tabs restored from a session start *discarded* (no view); the view is created on first activation. A timer discards idle background tabs (`pickIdleTabs`). Every change goes through a coalesced `emit()` that pushes a snapshot to the chrome and schedules a debounced session save.
+
+## Split view
+
+`TabManager` can show two tabs at once (`toggleSplit`). Both views are attached side by side (the primary pane is on the right in Arabic); the focused pane becomes the "active" tab, so the address bar and shortcuts follow it. Activating a tab outside the pair leaves split view.
+
+## Passwords
+
+Signed-in forms are noticed by `src/preload/forms.ts`, which runs in the preload's isolated world on http(s) pages only. It reports a login over a dedicated IPC channel and asks for credentials to autofill. `features/passwords/main/channel.ts` re-checks every call (top frame, real origin, normal window, HTTPS or localhost) and keeps a pending capture in memory until the user answers the notice bar. Passwords are encrypted with `safeStorage` before reaching `electron-store`. The pure rules (`pickCredentials`, `decideCapture`) are in `decide.ts` and unit-tested.
+
+## Extensions
+
+`features/extensions/main` installs extensions from the Chrome Web Store into the normal session using `electron-chrome-web-store` (MIT) and Electron's built-in `session.extensions`. See [docs/EXTENSIONS.md](docs/EXTENSIONS.md) for what that does and does not support.
+
+## Startup
+
+`main/splash.ts` shows a small frameless animated window immediately; the main window is created hidden and shown once the chrome has loaded and the splash has played. After an update, the chrome shows a "What's new" dialog from `shared/changelog.ts`.
 
 ## IPC
 

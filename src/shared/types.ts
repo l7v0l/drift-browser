@@ -12,6 +12,12 @@ export interface Settings {
   discardAfterMinutes: number
   /** True once the welcome / sign-in prompt was answered or skipped. */
   onboardingDone: boolean
+  /** App version whose "What's new" window the user last saw ('' on a fresh install). */
+  lastSeenVersion: string
+  /** Offer to save passwords typed into sign-in forms. */
+  savePasswords: boolean
+  /** Fill saved passwords into sign-in forms automatically. */
+  autofillPasswords: boolean
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -21,7 +27,10 @@ export const DEFAULT_SETTINGS: Settings = {
   homepage: 'drift://newtab',
   showBookmarksBar: true,
   discardAfterMinutes: 30,
-  onboardingDone: false
+  onboardingDone: false,
+  lastSeenVersion: '',
+  savePasswords: true,
+  autofillPasswords: true
 }
 
 export interface TabInfo {
@@ -35,6 +44,9 @@ export interface TabInfo {
   pinned: boolean
   /** Page zoom factor, 1 = 100%. */
   zoom: number
+  /** The page is playing sound right now. */
+  audible: boolean
+  muted: boolean
   /** True when the tab has no live page (restored or unloaded) and loads on activation. */
   discarded: boolean
 }
@@ -42,6 +54,8 @@ export interface TabInfo {
 export interface TabsState {
   tabs: TabInfo[]
   activeId: number | null
+  /** Ids of the two tabs shown side by side, or null when not in split view. */
+  split: [number, number] | null
 }
 
 export interface SavedTab {
@@ -140,4 +154,36 @@ export interface MemoryInfo {
   /** Whole app: browser, GPU, utility and every renderer process. */
   totalMB: number
   tabs: TabMemory[]
+}
+
+/** A saved login as shown in lists. The password itself is never part of this. */
+export interface PasswordSummary {
+  id: string
+  origin: string
+  username: string
+  updatedAt: number
+}
+
+/** "Save / update this password?" request shown in the chrome after a sign-in form is submitted. */
+export interface PasswordPrompt {
+  kind: 'save' | 'update'
+  origin: string
+  username: string
+}
+
+/** Stored login. `passwordEnc` is the OS-encrypted password (Electron safeStorage), base64. */
+export interface StoredPassword extends PasswordSummary {
+  passwordEnc: string
+  createdAt: number
+}
+
+export interface ExtensionSummary {
+  id: string
+  name: string
+  version: string
+  description: string
+  /** Toolbar icon as a data URL (null if the extension ships none). */
+  icon: string | null
+  hasPopup: boolean
+  optionsUrl: string | null
 }

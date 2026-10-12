@@ -6,6 +6,7 @@ import {
   type DownloadInfo,
   type HistoryEntry,
   type SessionData,
+  type StoredPassword,
   type Settings,
   type ShortcutItem
 } from '@shared/types'
@@ -18,6 +19,8 @@ interface StoreSchema {
   shortcuts: ShortcutItem[]
   downloads: DownloadInfo[]
   account: Account | null
+  passwords: StoredPassword[]
+  neverSavePasswords: string[]
 }
 
 export const store = new Store<StoreSchema>({
@@ -34,7 +37,9 @@ export const store = new Store<StoreSchema>({
       { id: 'github', title: 'GitHub', url: 'https://github.com' }
     ],
     downloads: [],
-    account: null
+    account: null,
+    passwords: [],
+    neverSavePasswords: []
   }
 })
 

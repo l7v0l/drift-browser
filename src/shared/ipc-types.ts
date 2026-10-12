@@ -1,6 +1,9 @@
 import type {
   Account,
   AccountProvider,
+  ExtensionSummary,
+  PasswordPrompt,
+  PasswordSummary,
   AppInfo,
   Bookmark,
   ClearRange,
@@ -50,6 +53,28 @@ export interface IpcInvokeMap {
   'tabs:home': Req
   'tabs:reopen-closed': Req
   'tabs:discard': Req<[id: number]>
+  'tabs:split-toggle': Req
+  'extensions:list': Req<[], ExtensionSummary[]>
+  'extensions:install': Req<[input: string], ExtensionSummary[]>
+  'extensions:remove': Req<[id: string], ExtensionSummary[]>
+  'extensions:open': Req<[id: string]>
+  'passwords:list': Req<[], PasswordSummary[]>
+  'passwords:reveal': Req<[id: string], string>
+  'passwords:remove': Req<[id: string], PasswordSummary[]>
+  'passwords:resolve': Req<[action: 'save' | 'never' | 'dismiss']>
+  'passwords:never-list': Req<[], string[]>
+  'passwords:never-remove': Req<[origin: string], string[]>
+  'passwords:available': Req<[], boolean>
+  'app:install-update': Req
+  'tabs:print': Req
+  'tabs:devtools': Req
+  'window:fullscreen': Req
+  'app:quit': Req
+  'tabs:mute': Req<[id: number, muted: boolean]>
+  'tabs:duplicate': Req<[id: number]>
+  'tabs:close-others': Req<[id: number]>
+  'tabs:close-right': Req<[id: number]>
+  'tabs:reload-tab': Req<[id: number]>
   'tabs:zoom': Req<[action: 'in' | 'out' | 'reset']>
   'find:start': Req<[text: string, forward: boolean, next: boolean]>
   'find:stop': Req
@@ -80,6 +105,9 @@ export interface IpcEventMap {
   'find:result': FindResult
   'bookmarks:changed': Bookmark[]
   'account:changed': Account | null
+  'extensions:changed': ExtensionSummary[]
+  'passwords:prompt': PasswordPrompt | null
+  'update:ready': { version: string }
   'downloads:changed': DownloadInfo[]
 }
 
@@ -122,6 +150,28 @@ const invokeAllow: Record<InvokeChannel, true> = {
   'tabs:home': true,
   'tabs:reopen-closed': true,
   'tabs:discard': true,
+  'tabs:split-toggle': true,
+  'extensions:list': true,
+  'extensions:install': true,
+  'extensions:remove': true,
+  'extensions:open': true,
+  'passwords:list': true,
+  'passwords:reveal': true,
+  'passwords:remove': true,
+  'passwords:resolve': true,
+  'passwords:never-list': true,
+  'passwords:never-remove': true,
+  'passwords:available': true,
+  'app:install-update': true,
+  'tabs:print': true,
+  'tabs:devtools': true,
+  'window:fullscreen': true,
+  'app:quit': true,
+  'tabs:mute': true,
+  'tabs:duplicate': true,
+  'tabs:close-others': true,
+  'tabs:close-right': true,
+  'tabs:reload-tab': true,
   'tabs:zoom': true,
   'find:start': true,
   'find:stop': true,
@@ -151,6 +201,9 @@ const eventAllow: Record<EventChannel, true> = {
   'find:result': true,
   'bookmarks:changed': true,
   'account:changed': true,
+  'extensions:changed': true,
+  'passwords:prompt': true,
+  'update:ready': true,
   'downloads:changed': true
 }
 
@@ -167,6 +220,16 @@ export const PAGE_INVOKE_CHANNELS: ReadonlySet<InvokeChannel> = new Set<InvokeCh
   'window:info',
   'account:get',
   'account:sign-out',
+  'extensions:list',
+  'extensions:install',
+  'extensions:remove',
+  'extensions:open',
+  'passwords:list',
+  'passwords:reveal',
+  'passwords:remove',
+  'passwords:never-list',
+  'passwords:never-remove',
+  'passwords:available',
   'tabs:navigate',
   'tabs:create',
   'bookmarks:list',

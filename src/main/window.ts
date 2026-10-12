@@ -36,8 +36,9 @@ export class AppWindow {
   private chromeHeight = CHROME_HEIGHT
   private overlay = false
 
-  static open(isPrivate = false): AppWindow {
-    return new AppWindow(isPrivate)
+  /** `showAfter` delays showing the window (e.g. until the startup splash has played). */
+  static open(isPrivate = false, showAfter?: Promise<void>): AppWindow {
+    return new AppWindow(isPrivate, showAfter)
   }
 
   static fromSender(wc: WebContents): AppWindow | undefined {
@@ -52,7 +53,7 @@ export class AppWindow {
     for (const w of AppWindow.all) w.emit(channel, payload)
   }
 
-  private constructor(isPrivate: boolean) {
+  private constructor(isPrivate: boolean, showAfter?: Promise<void>) {
     this.isPrivate = isPrivate
     this.primary = !isPrivate && ![...AppWindow.all].some((w) => !w.isPrivate)
     this.intro = this.primary && !hasShownIntro
@@ -129,7 +130,9 @@ export class AppWindow {
 
     this.ui.webContents.once('did-finish-load', () => {
       this.tabs.restore()
-      this.win.show()
+      void (showAfter ?? Promise.resolve()).then(() => {
+        if (!this.win.isDestroyed()) this.win.show()
+      })
     })
     if (process.env['ELECTRON_RENDERER_URL']) {
       void this.ui.webContents.loadURL(process.env['ELECTRON_RENDERER_URL'])
@@ -209,6 +212,21 @@ export class AppWindow {
         break
       case 'zoom-reset':
         this.tabs.zoom('reset')
+        break
+      case 'history':
+        this.tabs.create('drift://history')
+        break
+      case 'downloads':
+        this.tabs.create('drift://downloads')
+        break
+      case 'bookmarks':
+        this.tabs.create('drift://bookmarks')
+        break
+      case 'print':
+        this.tabs.print()
+        break
+      case 'devtools':
+        this.tabs.toggleDevTools()
         break
       case 'new-window':
         AppWindow.open(false)

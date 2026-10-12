@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import type { Account, AccountProvider } from '@shared/types'
 
-export type OnboardingPhase = 'splash' | 'welcome' | 'waiting' | 'email' | 'confirm' | 'done'
+export type OnboardingPhase = 'welcome' | 'waiting' | 'email' | 'confirm' | 'whatsnew' | 'done'
 
 interface AccountStore {
   account: Account | null

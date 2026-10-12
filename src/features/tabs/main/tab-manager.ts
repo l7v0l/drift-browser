@@ -35,6 +35,13 @@ export interface TabManagerOptions {
 }
 
 const MAX_CLOSED = 25
+const originOf = (url: string): string => {
+  try {
+    return new URL(url).origin
+  } catch {
+    return ''
+  }
+}
 const SAVE_DELAY_MS = 500
 const IDLE_CHECK_MS = 60_000
 
@@ -47,6 +54,8 @@ export class TabManager {
   private saveTimer: NodeJS.Timeout | null = null
 
   private idleTimer: NodeJS.Timeout
+  /** Split view: two tabs side by side. `a` is the primary pane. */
+  private split: { a: number; b: number } | null = null
   /** Newest find request; results of older (superseded) requests are dropped. */
   private findRequest = 0
 
@@ -80,6 +89,7 @@ export class TabManager {
   close(id: number): void {
     const index = this.tabs.findIndex((t) => t.id === id)
     if (index < 0) return
+    if (this.split && (this.split.a === id || this.split.b === id)) this.split = null
     const [tab] = this.tabs.splice(index, 1)
     if (!isNewTabUrl(tab.url)) {
       this.closed.push({ url: tab.url, title: tab.title, favicon: tab.favicon, pinned: tab.pinned })
@@ -100,13 +110,21 @@ export class TabManager {
     const tab = this.byId(id)
     if (!tab) return
     if (this.activeId !== id) this.stopFind()
+    // Activating a tab outside the split pair leaves split view.
+    if (this.split && this.split.a !== id && this.split.b !== id) this.split = null
     this.ensureView(tab)
+    const shown = new Set(this.split ? [this.split.a, this.split.b] : [id])
     // Inactive views are detached rather than hidden: Chromium's find-in-page returns no results
     // for a page that went hidden -> visible, but works after a detach/attach.
     for (const other of this.tabs) {
-      if (other.id !== id && other.view) this.opts.win.contentView.removeChildView(other.view)
+      if (!shown.has(other.id) && other.view) this.opts.win.contentView.removeChildView(other.view)
     }
-    this.opts.win.contentView.addChildView(tab.view!)
+    for (const sid of shown) {
+      const t = this.byId(sid)
+      if (!t) continue
+      this.ensureView(t)
+      this.opts.win.contentView.addChildView(t.view!)
+    }
     this.opts.win.contentView.addChildView(this.opts.ui)
     this.activeId = id
     tab.lastActive = Date.now()
@@ -183,10 +201,49 @@ export class TabManager {
     this.active()?.view?.webContents.stop()
   }
 
+  mute(id: number, muted: boolean): void {
+    this.byId(id)?.view?.webContents.setAudioMuted(muted)
+    this.emit()
+  }
+
+  /** Open a copy of the tab right after it. */
+  duplicate(id: number): void {
+    const source = this.byId(id)
+    if (!source) return
+    const at = this.tabs.indexOf(source)
+    const copy = this.add({
+      url: source.url,
+      title: source.title,
+      favicon: source.favicon,
+      pinned: false
+    })
+    this.move(copy.id, at + 1)
+    this.activate(copy.id)
+  }
+
+  /** Close every unpinned tab except this one. */
+  closeOthers(id: number): void {
+    if (!this.byId(id)) return
+    this.activate(id)
+    for (const t of [...this.tabs]) if (t.id !== id && !t.pinned) this.close(t.id)
+  }
+
+  /** Close the unpinned tabs after this one. */
+  closeRight(id: number): void {
+    const at = this.tabs.findIndex((t) => t.id === id)
+    if (at < 0) return
+    for (const t of this.tabs.slice(at + 1)) if (!t.pinned) this.close(t.id)
+  }
+
+  reloadTab(id: number): void {
+    this.byId(id)?.view?.webContents.reload()
+  }
+
   /** Unload one background tab; it reloads from its URL when activated again. */
   discard(id: number): void {
     const tab = this.byId(id)
     if (!tab?.view || id === this.activeId) return
+    if (this.split && (this.split.a === id || this.split.b === id)) return
     const url = tab.view.webContents.getURL()
     if (url) tab.url = url
     tab.loading = false
@@ -241,7 +298,44 @@ export class TabManager {
 
   /** Resize the visible page view to the area below the chrome UI. */
   layout(): void {
-    this.active()?.view?.setBounds(this.opts.getBounds())
+    const area = this.opts.getBounds()
+    if (!this.split) {
+      this.active()?.view?.setBounds(area)
+      return
+    }
+    // Two panes with a 2px gutter. In Arabic the primary pane sits on the right.
+    const gap = 2
+    const half = Math.floor((area.width - gap) / 2)
+    const left: Rectangle = { ...area, width: half }
+    const right: Rectangle = { ...area, x: area.x + half + gap, width: area.width - half - gap }
+    const rtl = this.opts.getSettings().language === 'ar'
+    this.byId(this.split.a)?.view?.setBounds(rtl ? right : left)
+    this.byId(this.split.b)?.view?.setBounds(rtl ? left : right)
+  }
+
+  print(): void {
+    this.active()?.view?.webContents.print()
+  }
+
+  toggleDevTools(): void {
+    this.active()?.view?.webContents.toggleDevTools()
+  }
+
+  /** Show the active tab next to another one (or leave split view). */
+  toggleSplit(): void {
+    if (this.split) {
+      this.split = null
+      if (this.activeId !== null) this.activate(this.activeId)
+      return
+    }
+    const active = this.active()
+    if (!active) return
+    const at = this.tabs.indexOf(active)
+    const partner =
+      this.tabs[at + 1] ?? this.tabs[at - 1] ?? this.byId(this.create(NEW_TAB_URL, false))
+    if (!partner) return
+    this.split = { a: active.id, b: partner.id }
+    this.activate(active.id)
   }
 
   owns(wc: WebContents): boolean {
@@ -256,7 +350,11 @@ export class TabManager {
   }
 
   snapshot(): TabsState {
-    return { tabs: this.tabs.map((t) => this.info(t)), activeId: this.activeId }
+    return {
+      tabs: this.tabs.map((t) => this.info(t)),
+      activeId: this.activeId,
+      split: this.split ? [this.split.a, this.split.b] : null
+    }
   }
 
   /** Write the session immediately (call on quit). */
@@ -308,6 +406,8 @@ export class TabManager {
       canGoForward: nav?.canGoForward() ?? false,
       pinned: t.pinned,
       zoom: t.view?.webContents.getZoomFactor() ?? 1,
+      audible: t.view?.webContents.isCurrentlyAudible() ?? false,
+      muted: t.view?.webContents.audioMuted ?? false,
       discarded: t.view === null
     }
   }
@@ -363,6 +463,8 @@ export class TabManager {
       tab.loading = false
       const url = wc.getURL()
       if (url) tab.url = url
+      // Sites that declare no icon usually still serve /favicon.ico.
+      if (!tab.favicon && /^https?:/i.test(url)) tab.favicon = new URL(url).origin + '/favicon.ico'
       if (url && url !== tab.lastRecordedUrl) {
         tab.lastRecordedUrl = url
         this.opts.onVisit?.(url, tab.title)
@@ -370,8 +472,22 @@ export class TabManager {
       this.emit()
     })
     wc.on('did-navigate', (_e, url) => {
+      // A different site has a different icon; drop the old one until the new page reports it.
+      if (originOf(url) !== originOf(tab.url)) tab.favicon = null
       tab.url = url
       this.emit()
+    })
+    wc.on('audio-state-changed', () => this.emit())
+    // In split view the focused pane is the "active" tab (address bar, shortcuts follow it).
+    wc.on('focus', () => {
+      if (
+        this.split &&
+        (this.split.a === tab.id || this.split.b === tab.id) &&
+        this.activeId !== tab.id
+      ) {
+        this.activeId = tab.id
+        this.emit()
+      }
     })
     wc.on('found-in-page', (_e, result) => {
       if (tab.id === this.activeId && result.requestId >= this.findRequest) {

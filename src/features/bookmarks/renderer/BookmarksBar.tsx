@@ -23,7 +23,7 @@ export function BookmarksBar() {
           onAuxClick={(e) => e.button === 1 && void call('tabs:create', b.url)}
           className="flex max-w-[180px] shrink-0 items-center gap-2 rounded-full px-3 py-1 transition-colors duration-150 hover:bg-surface-2"
         >
-          <Favicon src={b.favicon} />
+          <Favicon src={b.favicon} url={b.url} />
           <span className="truncate">{b.title}</span>
         </button>
       ))}

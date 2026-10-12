@@ -1,7 +1,10 @@
 import { app, BrowserWindow } from 'electron'
+import { setupExtensions } from '@features/extensions/main/extensions'
+import { registerPasswordChannels } from '@features/passwords/main/channel'
 import { registerIpc } from './ipc'
 import { registerDriftScheme } from './protocol'
 import { setupAutoUpdate } from './updater'
+import { showSplash } from './splash'
 import { AppWindow } from './window'
 
 registerDriftScheme()
@@ -23,9 +26,14 @@ if (!app.requestSingleInstanceLock()) {
     win.focus()
   })
 
-  void app.whenReady().then(() => {
+  void app.whenReady().then(async () => {
+    const splash = showSplash()
     registerIpc()
-    AppWindow.open(false)
+    // Load installed extensions before any page opens; a failure (e.g. offline) must not block startup.
+    await setupExtensions().catch((error: Error) => console.warn('[extensions]', error.message))
+    registerPasswordChannels()
+    const first = AppWindow.open(false, splash.minTimeElapsed)
+    first.win.once('show', () => splash.close())
     setupAutoUpdate()
     app.on('activate', () => {
       if (BrowserWindow.getAllWindows().length === 0) AppWindow.open(false)

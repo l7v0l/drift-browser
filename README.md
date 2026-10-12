@@ -28,12 +28,22 @@ A small, fast desktop browser with first-class Arabic (RTL) and English support.
 - **New tab page** – clock, Hijri and Gregorian dates, big search box, editable shortcuts
 - **Bookmarks, history, downloads** – star button, bookmarks bar, searchable history with clear-by-range, download panel with progress
 - **Private windows** – nothing is saved: no history, cookies or session
+- **Password manager** – offers to save logins when you sign in or sign up, fills them in next time; encrypted with your OS key (Windows DPAPI), manage them at `drift://passwords`
+- **Extensions** – install from the Chrome Web Store, icons in the toolbar (basic Chrome extension API, see [docs/EXTENSIONS.md](docs/EXTENSIONS.md))
+- **Split view** – two pages side by side
+- **Tab menu** – right-click a tab: reload, duplicate, pin, mute, close others
+- **Startup screen and "What's new"** – animated splash, and a changelog window after every update
 - **Find in page** (`Ctrl+F`) and **zoom** (`Ctrl +` / `-` / `0`)
 - **Session restore** – your tabs come back when you reopen Drift
 - **Light on memory** – idle tabs are discarded automatically, pages load lazily, and `drift://about` shows memory use per tab
 - **Light / dark / auto theme**, Arabic (default, RTL) and English UI
 - **Optional sign-in** with Google or Microsoft: your email is pre-filled on Google / Microsoft sign-in pages (see [docs/SIGN_IN.md](docs/SIGN_IN.md))
-- **Internal pages** – `drift://settings`, `drift://history`, `drift://bookmarks`, `drift://downloads`, `drift://about`
+- **Internal pages** – `drift://settings`, `drift://history`, `drift://bookmarks`, `drift://downloads`, `drift://passwords`, `drift://extensions`, `drift://about`
+
+<p align="center">
+  <img src="docs/screenshots/menu-ar.png" alt="Main menu and split view" width="49%" />
+  <img src="docs/screenshots/split-ar.png" alt="Split view" width="49%" />
+</p>
 
 <p align="center">
   <img src="docs/screenshots/page-en-dark.png" alt="Browsing a page with bookmarks bar" width="49%" />

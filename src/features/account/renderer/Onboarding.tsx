@@ -1,13 +1,11 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useOverlay } from '@renderer/hooks/useOverlay'
-import { Splash } from '@features/splash/renderer/Splash'
+import { changelogSince, type ChangelogEntry } from '@shared/changelog'
 import type { Account, AccountProvider } from '@shared/types'
 import { useAccount } from './store'
 
 const call = window.drift.invoke
-const SPLASH_MS = 2600
-const SPLASH_FADE_MS = 500
 
 function Card({ children }: { children: ReactNode }) {
   return (
@@ -124,28 +122,38 @@ function EmailStep(props: {
 export function Onboarding({ intro }: { intro: boolean }) {
   const { t } = useTranslation()
   const { phase, pending, provider, error, set } = useAccount()
-  const showSplash = phase === 'splash'
+  const { i18n } = useTranslation()
+  const [news, setNews] = useState<ChangelogEntry[]>([])
   useOverlay(phase !== 'done')
 
-  const [leaving, setLeaving] = useState(false)
+  /** After sign-in is settled: show what changed since the last seen version, or just continue. */
+  const showNewsOrDone = async () => {
+    const [settings, info] = await Promise.all([call('settings:get'), call('app:info')])
+    if (settings.lastSeenVersion === '') {
+      void call('settings:set', { lastSeenVersion: info.version }) // fresh install: nothing to explain
+    } else {
+      const entries = changelogSince(settings.lastSeenVersion, info.version)
+      if (entries.length > 0) {
+        setNews(entries)
+        set({ phase: 'whatsnew' })
+        return
+      }
+    }
+    set({ phase: 'done', pending: null, error: null })
+  }
 
   useEffect(() => {
     if (!intro) return
-    set({ phase: 'splash' })
-    const fade = window.setTimeout(() => setLeaving(true), SPLASH_MS)
-    const next = window.setTimeout(async () => {
-      const [settings, account] = await Promise.all([call('settings:get'), call('account:get')])
-      set({ phase: !account && !settings.onboardingDone ? 'welcome' : 'done' })
-    }, SPLASH_MS + SPLASH_FADE_MS)
-    return () => {
-      window.clearTimeout(fade)
-      window.clearTimeout(next)
-    }
+    void Promise.all([call('settings:get'), call('account:get')]).then(([settings, account]) => {
+      if (!account && !settings.onboardingDone) set({ phase: 'welcome' })
+      else void showNewsOrDone()
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [intro, set])
 
   const finish = () => {
     void call('settings:set', { onboardingDone: true })
-    set({ phase: 'done', pending: null, error: null })
+    void showNewsOrDone()
   }
 
   const signIn = async (provider: AccountProvider) => {
@@ -180,8 +188,6 @@ export function Onboarding({ intro }: { intro: boolean }) {
   }
 
   if (phase === 'done') return null
-
-  if (showSplash) return <Splash leaving={leaving} />
 
   if (phase === 'welcome') {
     return (
@@ -220,6 +226,42 @@ export function Onboarding({ intro }: { intro: boolean }) {
           onSubmit={(email) => void submitEmail(email)}
           onBack={() => set({ phase: 'welcome', error: null })}
         />
+      </Card>
+    )
+  }
+
+  if (phase === 'whatsnew') {
+    const lang = i18n.language === 'en' ? 'en' : 'ar'
+    const dismiss = async () => {
+      const info = await call('app:info')
+      await call('settings:set', { lastSeenVersion: info.version })
+      set({ phase: 'done', pending: null, error: null })
+    }
+    return (
+      <Card>
+        <h2 className="mb-3 text-xl font-semibold">{t('whatsNew.title')}</h2>
+        <div className="max-h-80 overflow-y-auto">
+          {news.map((entry) => (
+            <section key={entry.version} className="mb-3">
+              <h3 className="mb-1 font-semibold text-accent">
+                <span className="font-label" dir="ltr">
+                  v{entry.version}
+                </span>
+              </h3>
+              <ul className="list-disc space-y-1 ps-5 text-muted">
+                {entry.items.map((item) => (
+                  <li key={item.en}>{item[lang]}</li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
+        <button
+          onClick={() => void dismiss()}
+          className="mt-4 w-full rounded-full bg-coral px-4 py-2 text-white transition-opacity duration-150 hover:opacity-90"
+        >
+          {t('whatsNew.close')}
+        </button>
       </Card>
     )
   }

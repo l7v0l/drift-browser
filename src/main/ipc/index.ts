@@ -11,9 +11,25 @@ import {
 } from '@features/bookmarks/main/bookmarks'
 import { clearHistory, listHistory, removeEntry } from '@features/history/main/history'
 import { listShortcuts, setShortcuts } from '@features/newtab/main/shortcuts'
+import {
+  installById,
+  listExtensions,
+  openExtensionPopup,
+  removeById
+} from '@features/extensions/main/extensions'
+import { resolvePrompt } from '@features/passwords/main/channel'
+import {
+  encryptionAvailable,
+  listPasswords,
+  neverSaveList,
+  removeNeverSave,
+  removePassword,
+  revealPassword
+} from '@features/passwords/main/passwords'
 import { accountService } from '../services'
 import { AppWindow } from '../window'
 import { getSettings, patchSettings } from '../store'
+import { installUpdate } from '../updater'
 
 type Handlers = {
   [C in InvokeChannel]: (
@@ -81,6 +97,34 @@ export function registerIpc(): void {
     'tabs:home': (w) => w.tabs.home(),
     'tabs:reopen-closed': (w) => w.tabs.reopenClosed(),
     'tabs:discard': (w, id) => w.tabs.discard(Number(id)),
+    'tabs:split-toggle': (w) => w.tabs.toggleSplit(),
+    'extensions:list': () => listExtensions(),
+    'extensions:install': async (_w, input) => extensionsChanged(await installById(String(input))),
+    'extensions:remove': async (_w, id) => extensionsChanged(await removeById(String(id))),
+    'extensions:open': (w, id) => {
+      const kind = openExtensionPopup(w.win, String(id))
+      if (kind === 'options') {
+        const url = listExtensions().find((e) => e.id === String(id))?.optionsUrl
+        if (url) w.tabs.create(url)
+      }
+    },
+    'passwords:list': () => listPasswords(),
+    'passwords:reveal': (_w, id) => revealPassword(String(id)),
+    'passwords:remove': (_w, id) => removePassword(String(id)),
+    'passwords:resolve': (w, action) => resolvePrompt(w, action),
+    'passwords:never-list': () => neverSaveList(),
+    'passwords:never-remove': (_w, origin) => removeNeverSave(String(origin)),
+    'passwords:available': () => encryptionAvailable(),
+    'app:install-update': () => installUpdate(),
+    'tabs:print': (w) => w.tabs.print(),
+    'tabs:devtools': (w) => w.tabs.toggleDevTools(),
+    'window:fullscreen': (w) => w.win.setFullScreen(!w.win.isFullScreen()),
+    'app:quit': () => app.quit(),
+    'tabs:mute': (w, id, muted) => w.tabs.mute(Number(id), Boolean(muted)),
+    'tabs:duplicate': (w, id) => w.tabs.duplicate(Number(id)),
+    'tabs:close-others': (w, id) => w.tabs.closeOthers(Number(id)),
+    'tabs:close-right': (w, id) => w.tabs.closeRight(Number(id)),
+    'tabs:reload-tab': (w, id) => w.tabs.reloadTab(Number(id)),
     'tabs:zoom': (w, action) => w.tabs.zoom(action),
     'find:start': (w, text, forward, next) =>
       w.tabs.find(String(text), Boolean(forward), Boolean(next)),
@@ -111,6 +155,11 @@ export function registerIpc(): void {
     const handler = handlers[channel] as (win: AppWindow, ...a: unknown[]) => unknown
     ipcMain.handle(channel, (e, ...args) => handler(authorize(e, channel), ...args))
   }
+}
+
+function extensionsChanged<T extends ReturnType<typeof listExtensions>>(items: T): T {
+  AppWindow.broadcast('extensions:changed', items)
+  return items
 }
 
 function bookmarksChanged<T extends ReturnType<typeof listBookmarks>>(items: T): T {

@@ -9,10 +9,19 @@ import { useFind } from '@features/find/renderer/store'
 import { AccountButton } from '@features/account/renderer/AccountButton'
 import { Onboarding } from '@features/account/renderer/Onboarding'
 import { startAccountSync } from '@features/account/renderer/store'
+import { ExtensionsBar } from '@features/extensions/renderer/ExtensionsBar'
+import { startExtensionsSync } from '@features/extensions/renderer/store'
 import { MainMenu } from '@features/menu/renderer/MainMenu'
 import { TabStrip } from '@features/tabs/renderer/TabStrip'
 import { startTabsSync, useTabs } from '@features/tabs/renderer/store'
-import { BOOKMARKS_BAR_HEIGHT, CHROME_HEIGHT, FIND_BAR_HEIGHT } from '@shared/constants'
+import { NoticeBar } from '@features/notices/renderer/NoticeBar'
+import { startNoticesSync, useNoticeCount } from '@features/notices/renderer/store'
+import {
+  BOOKMARKS_BAR_HEIGHT,
+  CHROME_HEIGHT,
+  FIND_BAR_HEIGHT,
+  NOTICE_BAR_HEIGHT
+} from '@shared/constants'
 import { useTranslation } from 'react-i18next'
 import { useAppearance } from './hooks/useAppearance'
 import { useSettings } from './store'
@@ -23,6 +32,7 @@ export function App() {
   const [isPrivate, setPrivate] = useState(false)
   const [intro, setIntro] = useState(false)
   const findOpen = useFind((s) => s.open)
+  const notices = useNoticeCount()
   const activeId = useTabs((s) => s.activeId)
   useAppearance()
 
@@ -36,6 +46,8 @@ export function App() {
       startBookmarksSync(),
       startDownloadsSync(),
       startAccountSync(),
+      startNoticesSync(),
+      startExtensionsSync(),
       window.drift.on('find:result', (r) => useFind.getState().setResult(r)),
       window.drift.on('ui:open-find', () => useFind.getState().setOpen(true))
     ]
@@ -45,9 +57,12 @@ export function App() {
   // The page views start below the chrome, so main must know its current height.
   useEffect(() => {
     const height =
-      CHROME_HEIGHT + (showBar ? BOOKMARKS_BAR_HEIGHT : 0) + (findOpen ? FIND_BAR_HEIGHT : 0)
+      CHROME_HEIGHT +
+      (showBar ? BOOKMARKS_BAR_HEIGHT : 0) +
+      (findOpen ? FIND_BAR_HEIGHT : 0) +
+      notices * NOTICE_BAR_HEIGHT
     void window.drift.invoke('ui:set-chrome-height', height)
-  }, [showBar, findOpen])
+  }, [showBar, findOpen, notices])
 
   // Find results belong to one page; leaving the tab ends the search (main clears highlights).
   useEffect(() => useFind.getState().setOpen(false), [activeId])
@@ -66,6 +81,7 @@ export function App() {
       <AddressBar
         trailing={
           <>
+            {!isPrivate && <ExtensionsBar />}
             <DownloadsButton />
             {!isPrivate && <AccountButton />}
             <MainMenu />
@@ -73,6 +89,7 @@ export function App() {
         }
       />
       {showBar && <BookmarksBar />}
+      <NoticeBar />
       {findOpen && <FindBar />}
       <Onboarding intro={intro} />
     </header>

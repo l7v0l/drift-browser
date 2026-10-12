@@ -10,6 +10,11 @@ export type ShortcutId =
   | 'reload'
   | 'fullscreen'
   | 'find'
+  | 'history'
+  | 'downloads'
+  | 'bookmarks'
+  | 'print'
+  | 'devtools'
   | 'zoom-in'
   | 'zoom-out'
   | 'zoom-reset'
@@ -29,6 +34,7 @@ export function matchShortcut(input: KeyInput): ShortcutId | null {
   const mod = input.control || input.meta
   if (key === 'f5') return 'reload'
   if (key === 'f11') return 'fullscreen'
+  if (key === 'f12') return 'devtools'
   if (input.alt && key === 'd' && !mod) return 'focus-address'
   if (!mod || input.alt) return null
   if (key === 'tab') return input.shift ? 'prev-tab' : 'next-tab'
@@ -37,8 +43,12 @@ export function matchShortcut(input: KeyInput): ShortcutId | null {
   if (key === '-' || key === '_') return 'zoom-out'
   if (key === '0') return 'zoom-reset'
   if (key === 'n') return input.shift ? 'private-window' : 'new-window'
+  if (key === 'o' && input.shift) return 'bookmarks'
   if (input.shift) return null
   if (key === 'f') return 'find'
+  if (key === 'h') return 'history'
+  if (key === 'j') return 'downloads'
+  if (key === 'p') return 'print'
   if (key === 'w') return 'close-tab'
   if (key === 'l') return 'focus-address'
   if (key === 'r') return 'reload'

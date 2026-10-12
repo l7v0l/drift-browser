@@ -7,7 +7,8 @@
     "delete": "Delete",
     "cancel": "Cancel",
     "add": "Add",
-    "done": "Done"
+    "done": "Done",
+    "save": "Save"
   },
   "tab": {
     "new": "New tab",
@@ -15,7 +16,15 @@
     "close": "Close tab",
     "pin": "Pin tab",
     "unpin": "Unpin tab",
-    "reopen": "Reopen closed tab"
+    "reopen": "Reopen closed tab",
+    "reload": "Reload",
+    "duplicate": "Duplicate tab",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "muteSite": "Mute site",
+    "unmuteSite": "Unmute site",
+    "closeOthers": "Close other tabs",
+    "closeRight": "Close tabs to the right"
   },
   "nav": {
     "back": "Back",
@@ -31,7 +40,18 @@
     "title": "Menu",
     "newWindow": "New window",
     "privateWindow": "Private window",
-    "private": "Private"
+    "private": "Private",
+    "newTab": "New tab",
+    "clearData": "Clear browsing data…",
+    "zoom": "Zoom",
+    "fullscreen": "Full screen",
+    "print": "Print…",
+    "split": "Split view (two pages)",
+    "splitClose": "Close split view",
+    "find": "Find in page",
+    "devtools": "Developer tools",
+    "exit": "Exit",
+    "signedIn": "Signed in"
   },
   "bookmarks": {
     "title": "Bookmarks",
@@ -115,5 +135,45 @@
     "invalidEmail": "Enter a valid email like name@gmail.com",
     "continue": "Continue",
     "back": "Back"
+  },
+  "whatsNew": {
+    "title": "What's new in Drift",
+    "close": "Got it"
+  },
+  "passwords": {
+    "title": "Passwords",
+    "saveQ": "Save password?",
+    "updateQ": "Update saved password?",
+    "update": "Update",
+    "never": "Never for this site",
+    "notNow": "Not now",
+    "intro": "Passwords are encrypted with your operating system key and stay on this device.",
+    "unavailable": "System encryption is not available on this device, so passwords cannot be saved.",
+    "offerSave": "Offer to save passwords",
+    "autofill": "Fill passwords automatically",
+    "search": "Search passwords",
+    "empty": "No saved passwords yet.",
+    "noUsername": "No username",
+    "show": "Show",
+    "hide": "Hide",
+    "copy": "Copy",
+    "neverTitle": "Sites where passwords are never saved"
+  },
+  "extensions": {
+    "title": "Extensions",
+    "intro": "Install extensions from the Chrome Web Store. Their icons appear in the toolbar. Some complex extensions may not work fully.",
+    "openStore": "Open Chrome Web Store",
+    "placeholder": "Extension link or id (32 letters)",
+    "install": "Install",
+    "installing": "Installing…",
+    "empty": "No extensions installed.",
+    "options": "Options",
+    "badId": "Enter an extension link from the Chrome Web Store, or its id.",
+    "failed": "Could not install the extension."
+  },
+  "update": {
+    "ready": "Drift {{version}} is ready",
+    "restart": "Restart now",
+    "later": "Later"
   }
 }

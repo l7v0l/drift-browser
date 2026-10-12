@@ -1,4 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
+import { initFormScript } from './forms'
 import { EVENT_CHANNELS, INVOKE_CHANNELS, type DriftApi } from '@shared/ipc-types'
 
 const api: DriftApi = {
@@ -19,4 +20,7 @@ const api: DriftApi = {
 // main) and on drift:// pages. Ordinary websites never see it; main re-checks the sender anyway.
 if (process.argv.includes('--drift-ui') || location.protocol === 'drift:') {
   contextBridge.exposeInMainWorld('drift', api)
+} else if (location.protocol === 'https:' || location.protocol === 'http:') {
+  // Ordinary website: no bridge, only the sign-in form helper (isolated from page scripts).
+  initFormScript()
 }
