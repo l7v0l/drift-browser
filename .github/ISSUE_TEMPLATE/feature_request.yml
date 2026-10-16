@@ -1,0 +1,11 @@
+name: Feature idea | فكرة ميزة
+description: Suggest something for Drift (see ROADMAP.md first)
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What do you want to do? | ماذا تريد أن تفعل؟
+      description: Describe the problem you want solved. Drift stays small on purpose, so say why it belongs.
+    validations:
+      required: true
